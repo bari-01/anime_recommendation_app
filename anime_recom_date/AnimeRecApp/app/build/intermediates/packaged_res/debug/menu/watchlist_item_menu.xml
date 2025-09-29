@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_mark_watching"
+        android:title="Mark as Watching/Reading" />
+    <item
+        android:id="@+id/action_mark_completed"
+        android:title="Mark as Completed" />
+    <item
+        android:id="@+id/action_mark_on_hold"
+        android:title="Mark as On Hold" />
+    <item
+        android:id="@+id/action_mark_dropped"
+        android:title="Mark as Dropped" />
+</menu>

@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "com.animerec.app-mergeDebugResources-63:/layout/item_watchlist.xml",
+        "source": "com.animerec.app-main-66:/layout/item_watchlist.xml"
+    },
+    {
+        "merged": "com.animerec.app-mergeDebugResources-63:/layout/activity_main.xml",
+        "source": "com.animerec.app-main-66:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.animerec.app-mergeDebugResources-63:/layout/fragment_details.xml",
+        "source": "com.animerec.app-main-66:/layout/fragment_details.xml"
+    },
+    {
+        "merged": "com.animerec.app-mergeDebugResources-63:/layout/fragment_profile.xml",
+        "source": "com.animerec.app-main-66:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "com.animerec.app-mergeDebugResources-63:/layout/fragment_history.xml",
+        "source": "com.animerec.app-main-66:/layout/fragment_history.xml"
+    },
+    {
+        "merged": "com.animerec.app-mergeDebugResources-63:/layout/item_similar_content.xml",
+        "source": "com.animerec.app-main-66:/layout/item_similar_content.xml"
+    },
+    {
+        "merged": "com.animerec.app-mergeDebugResources-63:/layout/fragment_watchlist.xml",
+        "source": "com.animerec.app-main-66:/layout/fragment_watchlist.xml"
+    },
+    {
+        "merged": "com.animerec.app-mergeDebugResources-63:/layout/item_history.xml",
+        "source": "com.animerec.app-main-66:/layout/item_history.xml"
+    }
+]

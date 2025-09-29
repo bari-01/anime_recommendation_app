@@ -1,0 +1,1 @@
+/home/a/android_projects/anime_recommendation_app/anime_recom_date/AnimeRecApp/app/build/intermediates/compiled_navigation_res/debug/compileDebugNavigationResources/navigation_nav_graph.xml.flat 

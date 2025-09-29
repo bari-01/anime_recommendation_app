@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.animerec.app-mergeDebugResources-62:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "/home/a/.gradle/caches/8.13/transforms/2c3c8b648a6accfb7a1de0a3f3837be6/transformed/core-1.8.0/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                },
+                {
+                    "source": "/home/a/.gradle/caches/8.13/transforms/2a2ea5f0838d25f6beaadd1a4d8690ea/transformed/appcompat-1.5.1/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "121",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "289"
+                    }
+                }
+            ]
+        }
+    ]
+}

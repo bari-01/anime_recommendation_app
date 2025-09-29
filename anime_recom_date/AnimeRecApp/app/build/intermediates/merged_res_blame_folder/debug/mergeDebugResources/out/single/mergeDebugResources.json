@@ -1,0 +1,102 @@
+[
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/drawable_chip_background.xml.flat",
+        "source": "com.animerec.app-main-66:/drawable/chip_background.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/layout_fragment_details.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/fragment_details.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/drawable_gradient_overlay.xml.flat",
+        "source": "com.animerec.app-main-66:/drawable/gradient_overlay.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/layout_activity_main.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/layout_fragment_profile.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/layout_item_similar_content.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/item_similar_content.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/layout_item_history.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/item_history.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.animerec.app-main-66:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/menu_bottom_nav_menu.xml.flat",
+        "source": "com.animerec.app-main-66:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/layout_fragment_watchlist.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/fragment_watchlist.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/menu_watchlist_item_menu.xml.flat",
+        "source": "com.animerec.app-main-66:/menu/watchlist_item_menu.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.animerec.app-main-66:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.animerec.app-main-66:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/layout_fragment_history.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/fragment_history.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/layout_item_watchlist.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/item_watchlist.xml"
+    },
+    {
+        "merged": "com.animerec.app-debug-64:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.animerec.app-main-66:/mipmap-hdpi/ic_launcher_round.webp"
+    }
+]

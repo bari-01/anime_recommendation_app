@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "com.animerec.app-merged_res-64:/navigation_nav_graph.xml.flat",
+        "source": "com.animerec.app-main-66:/navigation/nav_graph.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/layout_activity_main.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/layout_fragment_history.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/fragment_history.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/layout_fragment_watchlist.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/fragment_watchlist.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/layout_item_watchlist.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/item_watchlist.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/layout_item_similar_content.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/item_similar_content.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/layout_item_history.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/item_history.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/menu_watchlist_item_menu.xml.flat",
+        "source": "com.animerec.app-main-66:/menu/watchlist_item_menu.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/layout_fragment_details.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/fragment_details.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/drawable_chip_background.xml.flat",
+        "source": "com.animerec.app-main-66:/drawable/chip_background.xml"
+    },
+    {
+        "merged": "com.animerec.app-merged_res-64:/layout_fragment_profile.xml.flat",
+        "source": "com.animerec.app-main-66:/layout/fragment_profile.xml"
+    }
+]
