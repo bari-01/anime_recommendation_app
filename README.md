@@ -31,15 +31,32 @@ AnimeMate is a fully-featured Android application that helps users discover anim
 ## Installation
 
 ### Requirements
-- Android 8.0 (Oreo) or higher
+- **Android 12 (S) or higher** (API 31+)
+- **Java 17** or higher (for building from source)
 - MyAnimeList account (free to create)
 - Internet connection
 
-### Install Steps
+### Install Pre-built APK
 1. Download the latest APK from the releases section
 2. Enable "Install from Unknown Sources" in your device settings if needed
 3. Open the APK file to install
 4. Launch the app and log in with your MyAnimeList credentials
+
+### Build from Source (Linux)
+
+See [QUICKSTART.md](anime_recom_date/AnimeRecApp/QUICKSTART.md) for quick instructions, or use the automated build script:
+
+```bash
+cd anime_recom_date/AnimeRecApp
+chmod +x build_apk.sh
+./build_apk.sh
+```
+
+For detailed build instructions, see:
+- **[QUICKSTART.md](anime_recom_date/AnimeRecApp/QUICKSTART.md)** - Quick build guide
+- **[BUILD_GUIDE.md](anime_recom_date/AnimeRecApp/BUILD_GUIDE.md)** - Comprehensive build documentation
+- **[ANDROID12_SETUP.md](anime_recom_date/AnimeRecApp/ANDROID12_SETUP.md)** - Configuration details
+- **[COMPILATION_SETUP_SUMMARY.md](COMPILATION_SETUP_SUMMARY.md)** - Summary of recent updates
 
 ## Usage Guide
 
@@ -78,16 +95,42 @@ AnimeMate is a fully-featured Android application that helps users discover anim
 - Glide for image loading
 - CardStackView for swipe interface
 
+### Build Configuration
+- **Minimum SDK**: API 31 (Android 12)
+- **Target SDK**: API 34 (Android 14)
+- **Compile SDK**: API 34
+- **JVM Target**: Java 17
+- **Gradle**: 8.2
+- **Kotlin**: 1.9.20
+- **Android Gradle Plugin**: 8.2.0
+
 ### Building from Source
-1. Clone the repository
-2. Open the project in Android Studio
-3. Set up your MyAnimeList API credentials in `AnimeRecApp.kt`
-4. Build and run the project
+
+#### Quick Build (Linux)
+```bash
+cd anime_recom_date/AnimeRecApp
+chmod +x build_apk.sh
+./build_apk.sh
+```
+
+#### Manual Build
+1. Ensure Java 17+ is installed
+2. Clone the repository
+3. Set up Android SDK (script will auto-install if needed)
+4. Configure MyAnimeList API credentials in `AnimeRecApp.kt`
+5. Build:
+   ```bash
+   cd anime_recom_date/AnimeRecApp
+   ./gradlew clean assembleDebug
+   ```
+
+For detailed instructions, see:
+- [QUICKSTART.md](anime_recom_date/AnimeRecApp/QUICKSTART.md)
+- [BUILD_GUIDE.md](anime_recom_date/AnimeRecApp/BUILD_GUIDE.md)
 
 ### Running Tests
 - Unit tests: `./gradlew test`
 - Instrumented tests: `./gradlew connectedAndroidTest`
-- Memory leak check: `./memory_leak_check.sh`
 
 ## Privacy & Permissions
 
