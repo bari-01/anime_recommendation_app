@@ -1,36 +1,34 @@
 buildscript {
     ext{
-        kotlin_version = '2.2.20'
-        nav_version = '2.5.3'
-        lifecycle_version = '2.6.1'
-        room_version = '2.5.2'
+        kotlin_version = '1.9.20'
+        nav_version = '2.7.5'
+        lifecycle_version = '2.6.2'
+        room_version = '2.6.0'
         retrofit_version = '2.9.0'
-        glide_version = '5.0.5'
-        coroutines_version = '1.10.2'
-    } // Or your desired Kotlin version
+        glide_version = '4.16.0'
+        coroutines_version = '1.7.3'
+    }
     repositories {
-        //google()
-        //mavenCentral()
-        //gradlePluginPortal()
+        google()
+        mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // Other dependencies
     }
 }
 
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '8.13.0' apply false // Or your desired version
-    id 'com.android.library' version '8.13.0' apply false    // If you have library modules
-    id 'org.jetbrains.kotlin.android' version '2.2.20' apply false // Or your Kotlin version
-    id 'androidx.navigation.safeargs.kotlin' version '2.9.5' apply false
+    id 'com.android.application' version '8.2.0' apply false
+    id 'com.android.library' version '8.2.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.20' apply false
+    id 'androidx.navigation.safeargs.kotlin' version '2.7.5' apply false
 }
 
 allprojects {
     repositories {
-        //google()
-        //mavenCentral()
+        google()
+        mavenCentral()
     }
 }
