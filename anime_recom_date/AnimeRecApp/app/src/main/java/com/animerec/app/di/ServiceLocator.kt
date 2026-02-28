@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.di
 
 import android.content.Context
@@ -5,7 +15,9 @@ import com.animerec.app.api.MyAnimeListClient
 import com.animerec.app.auth.AuthManager
 import com.animerec.app.data.AnimeRepository
 import com.animerec.app.data.AnimeRepositoryImpl
+import com.animerec.app.recommendation.BasicRecommendationEngine
 import com.animerec.app.recommendation.RecommendationEngine
+import com.animerec.app.recommendation.UserPreferenceModel
 
 /**
  * Service locator for dependency injection
@@ -24,6 +36,9 @@ object ServiceLocator {
     @Volatile
     private var apiClient: MyAnimeListClient? = null
     
+    @Volatile
+    private var userPreferenceModel: UserPreferenceModel? = null
+    
     fun provideAnimeRepository(context: Context): AnimeRepository {
         return animeRepository ?: synchronized(this) {
             animeRepository ?: AnimeRepositoryImpl(
@@ -41,18 +56,37 @@ object ServiceLocator {
     
     fun provideRecommendationEngine(context: Context): RecommendationEngine {
         return recommendationEngine ?: synchronized(this) {
-            recommendationEngine ?: RecommendationEngine(
-                provideAnimeRepository(context)
+            recommendationEngine ?: BasicRecommendationEngine(
+                provideAnimeRepository(context),
+                provideUserPreferenceModel(context)
             ).also { recommendationEngine = it }
         }
     }
     
-    private fun provideApiClient(context: Context): MyAnimeListClient {
+    fun provideUserPreferenceModel(context: Context): UserPreferenceModel {
+        return userPreferenceModel ?: synchronized(this) {
+            userPreferenceModel ?: UserPreferenceModel(
+                context.applicationContext
+            ).also { userPreferenceModel = it }
+        }
+    }
+    
+    fun provideApiClient(context: Context): MyAnimeListClient {
         return apiClient ?: synchronized(this) {
             apiClient ?: MyAnimeListClient(
-                context.applicationContext,
-                provideAuthManager(context)
+                context.applicationContext
             ).also { apiClient = it }
         }
+    }
+    
+    /**
+     * Clear all cached instances (useful for testing or logout)
+     */
+    fun resetAll() {
+        animeRepository = null
+        authManager = null
+        recommendationEngine = null
+        apiClient = null
+        userPreferenceModel = null
     }
 }

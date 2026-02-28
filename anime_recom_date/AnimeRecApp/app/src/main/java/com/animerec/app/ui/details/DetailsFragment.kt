@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.ui.details
 
 import android.content.Intent
@@ -17,10 +27,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.findNavController
 import com.animerec.app.R
 import com.animerec.app.data.Resource
 import com.animerec.app.models.AnimeContent
 import com.animerec.app.models.ContentType
+import com.animerec.app.util.ErrorLogManager
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -33,21 +45,22 @@ class DetailsFragment : Fragment() {
     private val TAG = "DetailsFragment"
     private lateinit var viewModel: DetailsViewModel
     
-    // UI components
-    private lateinit var coverImageView: ImageView
-    private lateinit var titleTextView: TextView
-    private lateinit var typeAndStatusTextView: TextView
-    private lateinit var ratingTextView: TextView
-    private lateinit var synopsisTextView: TextView
-    private lateinit var genresChipGroup: ChipGroup
-    private lateinit var watchStatusButton: Button
-    private lateinit var watchTrailerButton: Button
-    private lateinit var userRatingBar: RatingBar
-    private lateinit var similarContentRecyclerView: RecyclerView
-    private lateinit var loadingIndicator: ProgressBar
-    private lateinit var errorTextView: TextView
+    // UI components — nullable to allow cleanup in onDestroyView
+    private var coverImageView: ImageView? = null
+    private var titleTextView: TextView? = null
+    private var typeAndStatusTextView: TextView? = null
+    private var ratingTextView: TextView? = null
+    private var synopsisTextView: TextView? = null
+    private var genresChipGroup: ChipGroup? = null
+    private var watchStatusButton: Button? = null
+    private var watchTrailerButton: Button? = null
+    private var viewOnMalButton: Button? = null
+    private var userRatingBar: RatingBar? = null
+    private var similarContentRecyclerView: RecyclerView? = null
+    private var loadingIndicator: ProgressBar? = null
+    private var errorTextView: TextView? = null
     
-    private lateinit var similarContentAdapter: SimilarContentAdapter
+    private var similarContentAdapter: SimilarContentAdapter? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +85,7 @@ class DetailsFragment : Fragment() {
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ErrorLogManager.logEvent(TAG, "LIFECYCLE", "onViewCreated")
         
         // Initialize UI components
         coverImageView = view.findViewById(R.id.coverImageView)
@@ -82,6 +96,7 @@ class DetailsFragment : Fragment() {
         genresChipGroup = view.findViewById(R.id.genresChipGroup)
         watchStatusButton = view.findViewById(R.id.watchStatusButton)
         watchTrailerButton = view.findViewById(R.id.watchTrailerButton)
+        viewOnMalButton = view.findViewById(R.id.viewOnMalButton)
         userRatingBar = view.findViewById(R.id.userRatingBar)
         similarContentRecyclerView = view.findViewById(R.id.similarContentRecyclerView)
         loadingIndicator = view.findViewById(R.id.loadingIndicator)
@@ -94,14 +109,11 @@ class DetailsFragment : Fragment() {
                 putString("contentType", similarContent.type.name)
             }
             
-            // Replace the current fragment with a new instance with the new content ID
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, DetailsFragment::class.java, bundle)
-                .addToBackStack(null)
-                .commit()
+            // Navigate using the Navigation Component
+            findNavController().navigate(R.id.detailsFragment, bundle)
         }
         
-        similarContentRecyclerView.apply {
+        similarContentRecyclerView?.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = similarContentAdapter
         }
@@ -111,18 +123,20 @@ class DetailsFragment : Fragment() {
             when (resource) {
                 is Resource.Loading -> {
                     showLoading(true)
-                    errorTextView.visibility = View.GONE
+                    errorTextView?.visibility = View.GONE
                 }
                 is Resource.Success -> {
                     showLoading(false)
-                    errorTextView.visibility = View.GONE
+                    errorTextView?.visibility = View.GONE
                     updateUIWithContentDetails(resource.data)
+                    ErrorLogManager.logEvent(TAG, "DATA", "Details loaded: ${resource.data.title}")
                 }
                 is Resource.Error -> {
                     showLoading(false)
-                    errorTextView.visibility = View.VISIBLE
-                    errorTextView.text = resource.message
+                    errorTextView?.visibility = View.VISIBLE
+                    errorTextView?.text = resource.message
                     Log.e(TAG, "Error loading content details: ${resource.message}")
+                    ErrorLogManager.logEvent(TAG, "ERROR", "Details load error: ${resource.message}")
                 }
             }
         }
@@ -130,18 +144,19 @@ class DetailsFragment : Fragment() {
         // Observe similar content
         viewModel.similarContent.observe(viewLifecycleOwner) { resource ->
             if (resource is Resource.Success && resource.data.isNotEmpty()) {
-                similarContentAdapter.submitList(resource.data)
-                similarContentRecyclerView.visibility = View.VISIBLE
+                similarContentAdapter?.submitList(resource.data)
+                similarContentRecyclerView?.visibility = View.VISIBLE
             } else {
-                similarContentRecyclerView.visibility = View.GONE
+                similarContentRecyclerView?.visibility = View.GONE
             }
         }
         
         // Set up user rating bar listener
-        userRatingBar.setOnRatingBarChangeListener { _, rating, fromUser ->
+        userRatingBar?.setOnRatingBarChangeListener { _, rating, fromUser ->
             if (fromUser) {
-                val content = (viewModel.contentDetails.value as? Resource.Success)?.data
-                if (content != null) {
+                val currentValue = viewModel.contentDetails.value
+                if (currentValue is Resource.Success) {
+                    val content = currentValue.data
                     val score = (rating * 2).toInt() // Convert 0-5 to 0-10
                     viewModel.rateContent(content, score)
                     Toast.makeText(context, "Rated ${content.title} $score/10", Toast.LENGTH_SHORT).show()
@@ -152,7 +167,7 @@ class DetailsFragment : Fragment() {
     
     private fun updateUIWithContentDetails(content: AnimeContent) {
         // Set title
-        titleTextView.text = content.title
+        titleTextView?.text = content.title
         
         // Set type and status
         val typeText = when (content.type) {
@@ -160,48 +175,50 @@ class DetailsFragment : Fragment() {
             ContentType.MANGA -> "Manga"
             ContentType.NOVEL -> "Light Novel"
         }
-        typeAndStatusTextView.text = "$typeText • ${formatStatus(content.status)}"
+        typeAndStatusTextView?.text = "$typeText • ${formatStatus(content.status)}"
         
         // Set rating
         if (content.malScore > 0) {
-            ratingTextView.text = "★ ${String.format("%.1f", content.malScore)}"
-            ratingTextView.visibility = View.VISIBLE
+            ratingTextView?.text = "★ ${String.format("%.1f", content.malScore)}"
+            ratingTextView?.visibility = View.VISIBLE
         } else {
-            ratingTextView.visibility = View.GONE
+            ratingTextView?.visibility = View.GONE
         }
         
         // Set synopsis
-        synopsisTextView.text = content.synopsis
+        synopsisTextView?.text = content.synopsis
         
         // Set genres
-        genresChipGroup.removeAllViews()
+        genresChipGroup?.removeAllViews()
         for (genre in content.genres) {
             val chip = Chip(requireContext()).apply {
                 text = genre
                 isCheckable = false
             }
-            genresChipGroup.addView(chip)
+            genresChipGroup?.addView(chip)
         }
         
         // Set user rating
-        userRatingBar.rating = content.userScore?.toFloat()?.div(2) ?: 0f
+        userRatingBar?.rating = content.userScore?.toFloat()?.div(2) ?: 0f
         
         // Load cover image
         if (content.imageUrl.isNotEmpty()) {
-            Glide.with(this)
-                .load(content.imageUrl)
-                .centerCrop()
-                .into(coverImageView)
+            coverImageView?.let {
+                Glide.with(this)
+                    .load(content.imageUrl)
+                    .centerCrop()
+                    .into(it)
+            }
         }
         
         // Set up watch status button
-        watchStatusButton.text = when {
+        watchStatusButton?.text = when {
             content.isCompleted -> "Completed"
             content.inWatchlist -> if (content.type == ContentType.ANIME) "In Plan to Watch" else "In Plan to Read"
             else -> if (content.type == ContentType.ANIME) "Add to Plan to Watch" else "Add to Plan to Read"
         }
         
-        watchStatusButton.setOnClickListener {
+        watchStatusButton?.setOnClickListener {
             val newStatus = when {
                 content.isCompleted -> if (content.type == ContentType.ANIME) "watching" else "reading"
                 content.inWatchlist -> "completed"
@@ -212,13 +229,29 @@ class DetailsFragment : Fragment() {
         
         // Set up watch trailer button
         if (content.type == ContentType.ANIME && !content.trailerUrl.isNullOrEmpty()) {
-            watchTrailerButton.visibility = View.VISIBLE
-            watchTrailerButton.setOnClickListener {
+            watchTrailerButton?.visibility = View.VISIBLE
+            watchTrailerButton?.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(content.trailerUrl))
                 startActivity(intent)
             }
         } else {
-            watchTrailerButton.visibility = View.GONE
+            watchTrailerButton?.visibility = View.GONE
+        }
+
+        // Set up "View on MAL" button
+        val malPath = when (content.type) {
+            ContentType.ANIME -> "anime"
+            ContentType.MANGA -> "manga"
+            ContentType.NOVEL -> "manga" // Novels are listed under manga on MAL
+        }
+        val malUrl = "https://myanimelist.net/$malPath/${content.id}"
+        viewOnMalButton?.setOnClickListener {
+            ErrorLogManager.logEvent(TAG, "NAV", "Opening MAL page: $malUrl")
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(malUrl)))
+            } catch (e: Exception) {
+                Toast.makeText(context, "Could not open browser", Toast.LENGTH_SHORT).show()
+            }
         }
     }
     
@@ -231,20 +264,40 @@ class DetailsFragment : Fragment() {
             "completed" -> "Completed"
             "on_hold" -> "On Hold"
             "dropped" -> "Dropped"
-            else -> status.capitalize()
+            else -> status.replaceFirstChar { it.uppercase() }
         }
     }
     
     private fun showLoading(isLoading: Boolean) {
-        loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
-        coverImageView.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        titleTextView.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        typeAndStatusTextView.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        ratingTextView.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        synopsisTextView.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        genresChipGroup.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        watchStatusButton.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        watchTrailerButton.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        userRatingBar.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        loadingIndicator?.visibility = if (isLoading) View.VISIBLE else View.GONE
+        coverImageView?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        titleTextView?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        typeAndStatusTextView?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        ratingTextView?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        synopsisTextView?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        genresChipGroup?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        watchStatusButton?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        watchTrailerButton?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        userRatingBar?.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        ErrorLogManager.logEvent(TAG, "LIFECYCLE", "onDestroyView \u2014 nulling 13 view refs")
+        coverImageView = null
+        titleTextView = null
+        typeAndStatusTextView = null
+        ratingTextView = null
+        synopsisTextView = null
+        genresChipGroup = null
+        watchStatusButton = null
+        watchTrailerButton = null
+        viewOnMalButton = null
+        userRatingBar = null
+        similarContentRecyclerView?.adapter = null
+        similarContentRecyclerView = null
+        loadingIndicator = null
+        errorTextView = null
+        similarContentAdapter = null
     }
 }

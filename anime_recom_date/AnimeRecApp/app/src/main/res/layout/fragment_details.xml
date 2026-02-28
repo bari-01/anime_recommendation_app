@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Author: Shuvam Banerji Seal | AnimeMate | MIT License -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -193,6 +194,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/watchStatusButton" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/viewOnMalButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="View on MyAnimeList"
+            android:textAllCaps="false"
+            app:icon="@drawable/ic_open_in_browser"
+            app:iconGravity="textStart"
+            app:cornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/watchTrailerButton" />
+
         <TextView
             android:id="@+id/similarContentLabel"
             android:layout_width="wrap_content"
@@ -203,7 +221,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/watchTrailerButton" />
+            app:layout_constraintTop_toBottomOf="@+id/viewOnMalButton" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/similarContentRecyclerView"

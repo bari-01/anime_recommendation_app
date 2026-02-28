@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Author: Shuvam Banerji Seal | AnimeMate | MIT License -->
+<resources>
+    <!-- Dark theme overrides — Warm tones -->
+    <style name="Theme.AnimeRec" parent="Theme.Material3.Dark">
+        <!-- Primary brand color — warm amber for dark -->
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryContainer">#FF5D4037</item>
+        <item name="colorOnPrimary">@color/purple_700</item>
+        <item name="colorOnPrimaryContainer">@color/purple_200</item>
+        <!-- Secondary brand color — warm coral -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryContainer">#FF4E342E</item>
+        <item name="colorOnSecondary">@color/purple_700</item>
+        <item name="colorOnSecondaryContainer">@color/teal_200</item>
+        <!-- Tertiary — amber -->
+        <item name="colorTertiary">@color/purple_200</item>
+        <item name="colorOnTertiary">@color/purple_700</item>
+        <!-- Surface (warm dark backgrounds) -->
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="colorOnSurface">@color/on_surface_dark</item>
+        <item name="colorSurfaceVariant">@color/surface_variant_dark</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant_dark</item>
+        <!-- Outline — warm brown tints -->
+        <item name="colorOutline">#FF8D6E63</item>
+        <item name="colorOutlineVariant">#FF3E2E24</item>
+        <!-- Error -->
+        <item name="colorError">#FFCF6679</item>
+        <item name="colorOnError">@color/black</item>
+        <!-- Status bar — warm dark -->
+        <item name="android:statusBarColor">@color/status_bar_dark</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Bottom nav background — warm dark brown -->
+        <item name="android:navigationBarColor">@color/bottom_nav_dark</item>
+    </style>
+
+    <!-- Splash theme (dark) -->
+    <style name="SplashTheme" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@color/surface_dark</item>
+        <item name="android:statusBarColor">@color/status_bar_dark</item>
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+</resources>

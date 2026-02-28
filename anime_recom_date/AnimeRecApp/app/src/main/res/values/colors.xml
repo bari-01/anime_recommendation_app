@@ -1,10 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Author: Shuvam Banerji Seal | AnimeMate | MIT License -->
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Primary palette — warm tones -->
+    <color name="purple_200">#FFFFCC80</color>     <!-- Warm amber light (kept name for compat) -->
+    <color name="purple_500">#FF8D6E63</color>     <!-- Coffee brown (light primary) -->
+    <color name="purple_700">#FF5D4037</color>     <!-- Dark coffee (splash bg) -->
+    <color name="teal_200">#FFFF8A65</color>       <!-- Warm coral accent -->
+    <color name="teal_700">#FFD84315</color>       <!-- Deep orange accent -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Light theme surfaces — coffee / creamy -->
+    <color name="surface_light">#FFFFF8F0</color>         <!-- Creamy white -->
+    <color name="surface_variant_light">#FFF5E6D3</color>  <!-- Light coffee cream -->
+    <color name="on_surface_light">#FF3E2723</color>       <!-- Dark brown text -->
+    <color name="on_surface_variant_light">#FF6D4C41</color><!-- Medium brown text -->
+
+    <!-- Dark theme surfaces — warm dark tones -->
+    <color name="surface_dark">#FF1A1410</color>           <!-- Warm deep brown-black -->
+    <color name="surface_variant_dark">#FF3E2E24</color>   <!-- Warm brown variant -->
+    <color name="on_surface_dark">#FFFFF3E0</color>        <!-- Warm off-white text -->
+    <color name="on_surface_variant_dark">#FFD7CCC8</color> <!-- Light brown text -->
+
+    <!-- Status bar colors -->
+    <color name="status_bar_light">#FF6D4C41</color>      <!-- Coffee brown bar -->
+    <color name="status_bar_dark">#FF1A1410</color>        <!-- Warm dark bar -->
+
+    <!-- Bottom nav -->
+    <color name="bottom_nav_light">#FFFFF3E0</color>      <!-- Warm cream nav -->
+    <color name="bottom_nav_dark">#FF2A1F18</color>        <!-- Warm dark brown nav -->
+
+    <!-- Card colors -->
+    <color name="card_light">#FFFFFAF5</color>             <!-- Warm white card -->
+    <color name="card_dark">#FF2A1F18</color>              <!-- Warm dark brown card -->
+
+    <!-- Stats colors -->
+    <color name="stats_watching">#FF66BB6A</color>
+    <color name="stats_completed">#FF42A5F5</color>
+    <color name="stats_on_hold">#FFFFCA28</color>
+    <color name="stats_dropped">#FFEF5350</color>
+    <color name="stats_plan_to_watch">#FF9E9E9E</color>
+
+    <!-- Accent gradient — warm amber/coffee -->
+    <color name="gradient_start">#FF8D6E63</color>        <!-- Coffee -->
+    <color name="gradient_center">#FFA1887F</color>        <!-- Warm rose-brown -->
+    <color name="gradient_end">#FFFFCC80</color>           <!-- Amber light -->
+
+    <!-- Splash background -->
+    <color name="splash_background">#FF5D4037</color>     <!-- Dark coffee -->
 </resources>

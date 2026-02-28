@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.ui.watchlist
 
 import android.app.Application
@@ -10,6 +20,7 @@ import com.animerec.app.AnimeRecApp
 import com.animerec.app.data.Resource
 import com.animerec.app.models.AnimeContent
 import com.animerec.app.models.ContentType
+import com.animerec.app.util.ErrorLogManager
 import kotlinx.coroutines.launch
 
 /**
@@ -40,6 +51,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
                 _watchlistItems.value = result
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading watchlist", e)
+                ErrorLogManager.logEvent(TAG, "ERROR", "Watchlist load failed: ${e.message}")
                 _watchlistItems.value = Resource.Error("Failed to load watchlist: ${e.message}")
             }
         }
@@ -62,7 +74,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error updating status", e)
-                // Could show error toast or update UI with error state
+                ErrorLogManager.logEvent(TAG, "ERROR", "Status update failed: ${e.message}")
             }
         }
     }

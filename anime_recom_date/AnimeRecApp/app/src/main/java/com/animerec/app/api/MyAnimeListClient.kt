@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.api
 
 import android.content.Context
@@ -5,6 +15,7 @@ import android.util.Log
 import com.animerec.app.AnimeRecApp
 import com.animerec.app.auth.AuthManager
 import com.animerec.app.data.ApiResponseCache
+import com.animerec.app.util.ErrorLogManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -99,6 +110,7 @@ class MyAnimeListClient(private val context: Context) {
             } else {
                 val errorBody = response.errorBody()?.string()
                 Log.e(TAG, "API error (${response.code()}): $errorBody")
+                ErrorLogManager.logEvent(TAG, "ERROR", "API error (${response.code()}): $errorBody")
                 
                 // Handle 401 Unauthorized (token expired)
                 if (response.code() == 401) {
@@ -122,6 +134,7 @@ class MyAnimeListClient(private val context: Context) {
             return@withContext null
         } catch (e: Exception) {
             Log.e(TAG, "API call failed", e)
+            ErrorLogManager.logEvent(TAG, "ERROR", "API call failed: ${e.message}")
             return@withContext null
         }
     }

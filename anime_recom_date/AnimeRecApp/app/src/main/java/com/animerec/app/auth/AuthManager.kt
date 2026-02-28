@@ -1,10 +1,23 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.auth
 
 import android.content.Context
 import android.util.Log
 import com.animerec.app.AnimeRecApp
+import com.animerec.app.util.ErrorLogManager
 import com.animerec.app.utils.SecureStorage
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -19,7 +32,7 @@ class AuthManager(private val context: Context) {
     
     private val TAG = "AuthManager"
     private val secureStorage = SecureStorage(context)
-    private val refreshLock = Object() // Add lock for thread safety
+    private val refreshLock = Mutex() // Coroutine-safe lock for thread safety
     
     /**
      * Check if the user is authenticated.
@@ -46,8 +59,8 @@ class AuthManager(private val context: Context) {
         
         // Refresh the token if it's expired, will expire soon, or force refresh is requested
         if (forceRefresh || currentTime >= expiryTime - 5 * 60 * 1000) { // 5 minutes buffer
-            return@withContext synchronized(refreshLock) {
-                // Check again inside the synchronized block to avoid multiple refreshes
+            return@withContext refreshLock.withLock {
+                // Check again inside the lock to avoid multiple refreshes
                 val currentToken = secureStorage.getString(SecureStorage.ACCESS_TOKEN_KEY)
                 val currentExpiry = secureStorage.getLong(SecureStorage.TOKEN_EXPIRY_KEY)
                 
@@ -57,15 +70,16 @@ class AuthManager(private val context: Context) {
                     
                     if (refreshToken.isEmpty()) {
                         Log.e(TAG, "No refresh token found")
+                        ErrorLogManager.logEvent(TAG, "ERROR", "No refresh token found — forcing logout")
                         logout()
-                        return@synchronized null
+                        return@withLock null
                     }
                     
                     val newToken = refreshToken(refreshToken)
-                    return@synchronized newToken
+                    return@withLock newToken
                 } else {
-                    // Another thread refreshed the token while we were waiting
-                    return@synchronized currentToken
+                    // Another coroutine refreshed the token while we were waiting
+                    return@withLock currentToken
                 }
             }
         }
@@ -130,10 +144,12 @@ class AuthManager(private val context: Context) {
             } else {
                 val error = response.body?.string() ?: response.message
                 Log.e(TAG, "Failed to refresh token: $error")
+                ErrorLogManager.logEvent(TAG, "ERROR", "Token refresh failed: $error")
                 logout()
             }
         } catch (e: Exception) {
             Log.e(TAG, "Exception during token refresh", e)
+            ErrorLogManager.logEvent(TAG, "ERROR", "Token refresh exception: ${e.message}")
             logout()
         }
         
@@ -202,9 +218,11 @@ class AuthManager(private val context: Context) {
             } else {
                 val error = response.body?.string() ?: response.message
                 Log.e(TAG, "Failed to exchange code for tokens: $error")
+                ErrorLogManager.logEvent(TAG, "ERROR", "Token exchange failed: $error")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Exception during token exchange", e)
+            ErrorLogManager.logEvent(TAG, "ERROR", "Token exchange exception: ${e.message}")
         }
         
         return@withContext false

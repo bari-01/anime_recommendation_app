@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.ui.auth
 
 import android.content.Intent
@@ -14,7 +24,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.animerec.app.AnimeRecApp
 import com.animerec.app.R
 import com.animerec.app.utils.OAuthUtil
 import com.animerec.app.utils.SecureStorage
@@ -29,9 +38,8 @@ class LoginFragment : Fragment() {
     private lateinit var viewModel: AuthViewModel
     
     // UI components
-    private lateinit var loginButton: Button
-    private lateinit var progressBar: ProgressBar
-    private lateinit var errorMessage: TextView
+    private var loginButton: Button? = null
+    private var progressBar: ProgressBar? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +64,11 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         // Initialize UI components
-        loginButton = view.findViewById(R.id.loginButton)
-        progressBar = view.findViewById(R.id.loginProgress)
-        errorMessage = view.findViewById(R.id.errorMessage)
+        loginButton = view.findViewById(R.id.btn_login_mal)
+        progressBar = view.findViewById(R.id.loading_indicator)
         
         // Set up button click
-        loginButton.setOnClickListener {
+        loginButton?.setOnClickListener {
             initiateLogin()
         }
         
@@ -70,11 +77,9 @@ class LoginFragment : Fragment() {
             when (authState) {
                 is AuthViewModel.AuthState.Idle -> {
                     showLoading(false)
-                    errorMessage.visibility = View.GONE
                 }
                 is AuthViewModel.AuthState.Loading -> {
                     showLoading(true)
-                    errorMessage.visibility = View.GONE
                 }
                 is AuthViewModel.AuthState.Success -> {
                     showLoading(false)
@@ -82,8 +87,7 @@ class LoginFragment : Fragment() {
                 }
                 is AuthViewModel.AuthState.Error -> {
                     showLoading(false)
-                    errorMessage.text = authState.message
-                    errorMessage.visibility = View.VISIBLE
+                    Log.e(TAG, "Auth error: ${authState.message}")
                 }
             }
         }
@@ -175,7 +179,13 @@ class LoginFragment : Fragment() {
      * Show/hide loading indicator.
      */
     private fun showLoading(isLoading: Boolean) {
-        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        loginButton.isEnabled = !isLoading
+        progressBar?.visibility = if (isLoading) View.VISIBLE else View.GONE
+        loginButton?.isEnabled = !isLoading
+    }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        loginButton = null
+        progressBar = null
     }
 }

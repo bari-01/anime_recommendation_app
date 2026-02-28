@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Author: Shuvam Banerji Seal | AnimeMate | MIT License -->
+<paths>
+    <cache-path
+        name="error_logs"
+        path="/" />
+    <files-path
+        name="crash_logs"
+        path="logs/" />
+</paths>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Author: Shuvam Banerji Seal | AnimeMate | MIT License -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="150dp"
+    android:height="150dp"
+    android:viewportWidth="150"
+    android:viewportHeight="150">
+
+    <!-- Background circle — warm gradient feel -->
+    <path
+        android:pathData="M75,75m-70,0a70,70 0,1 1,140 0a70,70 0,1 1,-140 0"
+        android:fillColor="#FF8D6E63" />
+
+    <!-- Inner circle — darker ring -->
+    <path
+        android:pathData="M75,75m-60,0a60,60 0,1 1,120 0a60,60 0,1 1,-120 0"
+        android:fillColor="#FF5D4037" />
+
+    <!-- Play button / heart mashup — stylized anime play symbol -->
+    <!-- Large play triangle -->
+    <path
+        android:pathData="M58,42L58,108L110,75Z"
+        android:fillColor="#FFFFCC80" />
+
+    <!-- Small heart overlay at top-right of play button -->
+    <path
+        android:pathData="M95,40
+            C95,35 100,30 105,30
+            C110,30 113,35 113,40
+            C113,42 112,45 110,48
+            L104,55
+            L98,48
+            C96,45 95,42 95,40Z"
+        android:fillColor="#FFFF8A65" />
+
+    <!-- Film strip accent — top left -->
+    <path
+        android:pathData="M28,32L28,48L36,48L36,32Z"
+        android:fillColor="#FFFFCC80"
+        android:fillAlpha="0.6" />
+    <path
+        android:pathData="M28,56L28,72L36,72L36,56Z"
+        android:fillColor="#FFFFCC80"
+        android:fillAlpha="0.6" />
+
+    <!-- Star sparkle — bottom right -->
+    <path
+        android:pathData="M118,100L121,108L129,108L123,113L125,121L118,116L111,121L113,113L107,108L115,108Z"
+        android:fillColor="#FFFFCC80"
+        android:fillAlpha="0.8" />
+
+    <!-- Outer ring accent -->
+    <path
+        android:pathData="M75,75m-68,0a68,68 0,1 1,136 0a68,68 0,1 1,-136 0"
+        android:strokeColor="#FFFFCC80"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:strokeAlpha="0.4" />
+
+</vector>

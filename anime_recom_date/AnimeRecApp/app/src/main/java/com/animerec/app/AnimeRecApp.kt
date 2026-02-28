@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app
 
 import android.app.Application
@@ -11,6 +21,7 @@ import com.animerec.app.data.AnimeRepository
 import com.animerec.app.di.ServiceLocator
 import com.animerec.app.data.AnimeRepositoryImpl
 import com.animerec.app.recommendation.RecommendationEngine
+import com.animerec.app.util.ErrorLogManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.DecodeFormat
@@ -44,7 +55,7 @@ class AnimeRecApp : Application(), ComponentCallbacks2 {
     
     companion object {
         // For MyAnimeList OAuth - Register at https://myanimelist.net/apiconfig
-        const val CLIENT_ID = "c65a18864c7e9d6ef7a8f5c7eb6f5a06"
+        const val CLIENT_ID = "089df4a470b62b939ab3eaf6477616ee"
         
         // OAuth endpoints
         const val REDIRECT_URI = "animerec://auth"
@@ -76,6 +87,9 @@ class AnimeRecApp : Application(), ComponentCallbacks2 {
         super.onCreate()
         Log.d(TAG, "Application initializing")
         
+        // Install automatic crash logger — writes stack traces to files/logs/
+        ErrorLogManager.installCrashHandler(this)
+        
         // Initialize Glide with optimized settings
         Glide.init(this, GlideBuilder().apply {
             setDefaultRequestOptions(
@@ -106,6 +120,7 @@ class AnimeRecApp : Application(), ComponentCallbacks2 {
         }
     }
     
+    @Suppress("DEPRECATION")
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         

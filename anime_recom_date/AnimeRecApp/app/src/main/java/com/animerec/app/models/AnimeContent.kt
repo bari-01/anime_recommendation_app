@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.models
 
 data class AnimeContent(
@@ -20,7 +30,12 @@ data class AnimeContent(
     val airingStatus: String = "",
     val isFavorite: Boolean = false,
     val inWatchlist: Boolean = false,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    // Additional properties for compatibility
+    val mediaType: String = "",
+    val startDate: String? = null,
+    val endDate: String? = null,
+    val numEpisodes: Int? = episodes
 )
 
 enum class ContentType {

@@ -1,18 +1,19 @@
+// Author: Shuvam Banerji Seal | AnimeMate | MIT License
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
     id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
     namespace "com.animerec.app"
+    compileSdk 35
     
     defaultConfig {
         applicationId "com.animerec.app"
         minSdk 31 // Android 12
-        targetSdk 34 // Stable version
-        compileSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0.0"
         
@@ -37,7 +38,6 @@ android {
             jniDebuggable false
             renderscriptDebuggable false
             pseudoLocalesEnabled false
-            zipAlignEnabled true
         }
         
         debug {
@@ -67,6 +67,13 @@ android {
     }
 
     // Avoid duplicate file exceptions
+
+    // Name the output APK "AnimeMate"
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "AnimeMate-${variant.versionName}-${variant.buildType.name}.apk"
+        }
+    }
 }
 
 dependencies {

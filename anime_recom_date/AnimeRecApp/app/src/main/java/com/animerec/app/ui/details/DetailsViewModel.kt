@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.ui.details
 
 import android.app.Application
@@ -11,6 +21,7 @@ import com.animerec.app.data.Resource
 import com.animerec.app.models.AnimeContent
 import com.animerec.app.models.ContentType
 import com.animerec.app.recommendation.RecommendationEngine
+import com.animerec.app.util.ErrorLogManager
 import kotlinx.coroutines.launch
 
 /**
@@ -50,6 +61,7 @@ class DetailsViewModel(application: Application) : AndroidViewModel(application)
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading content details", e)
+                ErrorLogManager.logEvent(TAG, "ERROR", "Details load failed: ${e.message}")
                 _contentDetails.value = Resource.Error("Failed to load details: ${e.message}")
             }
         }
@@ -65,6 +77,7 @@ class DetailsViewModel(application: Application) : AndroidViewModel(application)
                 _similarContent.value = result
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading similar content", e)
+                ErrorLogManager.logEvent(TAG, "ERROR", "Similar content load failed: ${e.message}")
                 _similarContent.value = Resource.Error("Failed to load similar content")
             }
         }
@@ -97,6 +110,7 @@ class DetailsViewModel(application: Application) : AndroidViewModel(application)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error updating status", e)
+                ErrorLogManager.logEvent(TAG, "ERROR", "Status update failed: ${e.message}")
             }
         }
     }
@@ -127,6 +141,7 @@ class DetailsViewModel(application: Application) : AndroidViewModel(application)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error rating content", e)
+                ErrorLogManager.logEvent(TAG, "ERROR", "Rating failed: ${e.message}")
             }
         }
     }

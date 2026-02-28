@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.recommendation
 
 import android.util.Log
@@ -6,15 +16,24 @@ import com.animerec.app.data.Resource
 import com.animerec.app.models.AnimeContent
 import com.animerec.app.models.ContentType
 import com.animerec.app.models.User
+import com.animerec.app.util.ErrorLogManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import kotlin.math.ln
 import kotlin.math.min
+import kotlin.random.Random
 
 /**
- * Basic implementation of the recommendation engine.
- * Uses a combination of genre-based filtering and user preferences.
+ * Twitter/X-style recommendation engine.
+ *
+ * Adapted from Twitter's open-source "the-algorithm" ranking approach:
+ *  1. Engagement prediction  → user interaction history weights
+ *  2. Content-user affinity  → genre/type matching with learned weights
+ *  3. Temporal decay          → boost for currently airing / recently released content
+ *  4. Diversity injection     → ensure genre variety, avoid filter bubbles
+ *  5. Social proof            → MAL score & popularity as proxy
+ *  6. Negative signals        → penalise disliked genres
+ *  7. Exploration (20%) vs Exploitation (80%)
  */
 class BasicRecommendationEngine(
     private val repository: AnimeRepository,
@@ -26,52 +45,239 @@ class BasicRecommendationEngine(
     // Cache for recommendations to avoid repeated API calls
     private val recommendationCache = mutableMapOf<String, Pair<List<AnimeContent>, Long>>()
     
-    // Cache expiration time in milliseconds (30 minutes)
-    private val CACHE_EXPIRATION = 30 * 60 * 1000L
+    // Cache expiration time in milliseconds (10 minutes — shorter for more variety)
+    private val CACHE_EXPIRATION = 10 * 60 * 1000L
+    
+    // ──────────────────────────────────────────────
+    //  Twitter-style ranking weights
+    // ──────────────────────────────────────────────
+    companion object {
+        // Engagement prediction weights
+        private const val W_GENRE_AFFINITY = 3.0      // Per matching preferred genre
+        private const val W_GENRE_NEGATIVE = -2.5     // Per matching disliked genre
+        private const val W_CONTENT_TYPE_MATCH = 2.0  // Content type user prefers
+        private const val W_LEARNED_GENRE = 1.0       // From UserPreferenceModel weights
+        
+        // Social proof weights
+        private const val W_MAL_SCORE = 1.5           // MAL community score (0-10 → 0-1.5)
+        private const val W_POPULARITY = 0.8          // Popularity bonus (log-scaled)
+        
+        // Temporal decay
+        private const val W_AIRING_BOOST = 4.0        // Currently airing content boost
+        private const val W_RECENT_BOOST = 2.0        // Released in past 2 years
+        
+        // Diversity
+        private const val EXPLOITATION_RATIO = 0.80   // 80% personalised, 20% exploration
+        private const val MAX_SAME_GENRE_RATIO = 0.4  // Max 40% from same genre
+        
+        // Ranking types for diversified API fetching
+        private val ANIME_RANKING_TYPES = listOf("all", "airing", "bypopularity", "favorite", "upcoming")
+        private val MANGA_RANKING_TYPES = listOf("all", "bypopularity", "favorite")
+    }
     
     override suspend fun getRecommendations(
         user: User,
         limit: Int
     ): Resource<List<AnimeContent>> = withContext(Dispatchers.IO) {
         try {
-            // Check cache first
-            val cacheKey = "recommendations_${user.name}_$limit"
+            val recsStart = System.currentTimeMillis()
+            ErrorLogManager.logEvent(TAG, "RECS", "Starting recommendation generation for user=${user.name}, limit=$limit")
+
+            // Use a time-seeded cache key so results change between sessions
+            val timeSlot = System.currentTimeMillis() / CACHE_EXPIRATION
+            val cacheKey = "recs_${user.name}_${limit}_$timeSlot"
             val cachedRecommendations = getFromCache(cacheKey)
             if (cachedRecommendations != null) {
                 return@withContext Resource.Success(cachedRecommendations)
             }
             
-            // Get all content types the user is interested in
             val contentTypes = user.contentPreferences
             if (contentTypes.isEmpty()) {
                 return@withContext Resource.Error("No content types selected")
             }
             
-            // Get recommendations for each content type
-            val allRecommendations = mutableListOf<AnimeContent>()
+            // ── Step 1: Gather a large candidate pool from diverse sources ──
+            val candidatePool = mutableListOf<AnimeContent>()
+            val itemsPerType = (limit * 3) / contentTypes.size  // fetch 3× for filtering headroom
             
-            // Determine how many recommendations to get for each type
-            val itemsPerType = limit / contentTypes.size
-            
-            // Get recommendations for each content type
             for (contentType in contentTypes) {
-                val recommendationsForType = getRecommendationsForType(user, contentType, itemsPerType)
-                if (recommendationsForType is Resource.Success) {
-                    allRecommendations.addAll(recommendationsForType.data)
+                val typeResult = getRecommendationsForType(user, contentType, itemsPerType)
+                if (typeResult is Resource.Success) {
+                    candidatePool.addAll(typeResult.data)
                 }
             }
             
-            // Sort and limit recommendations
-            val filteredRecommendations = filterAndSortRecommendations(allRecommendations, user, limit)
+            // ── Step 2: Remove duplicates and already-seen / not-interested ──
+            val notInterestedIds = (repository.getNotInterestedIds() as? Resource.Success)?.data ?: emptyList()
+
+            // Fetch user's existing anime/manga lists to exclude already-watched content
+            val userAnimeIds = (repository.getUserAnimeList(null) as? Resource.Success)
+                ?.data?.map { it.id }?.toSet() ?: emptySet()
+            val userMangaIds = (repository.getUserMangaList(null) as? Resource.Success)
+                ?.data?.map { it.id }?.toSet() ?: emptySet()
+            val exclusionSet = notInterestedIds.toSet() + userAnimeIds + userMangaIds
+
+            val uniqueCandidates = candidatePool
+                .distinctBy { it.id }
+                .filter { it.id !in exclusionSet }
+            
+            // ── Step 3: Twitter-style ranking ──
+            val scored = uniqueCandidates.map { content ->
+                content to calculateTwitterScore(content, user)
+            }
+            
+            // ── Step 4: Exploitation / Exploration split ──
+            val exploitationCount = (limit * EXPLOITATION_RATIO).toInt()
+            val explorationCount = limit - exploitationCount
+            
+            // Top-ranked (exploitation)
+            val rankedPool = scored.sortedByDescending { it.second }.map { it.first }
+            val exploitationPicks = rankedPool.take(exploitationCount)
+            
+            // Exploration: random sample from remaining (excluding exploitation picks)
+            val exploitationIds = exploitationPicks.map { it.id }.toSet()
+            val explorationPool = rankedPool.filter { it.id !in exploitationIds }
+            val explorationPicks = if (explorationPool.size > explorationCount) {
+                explorationPool.shuffled(Random(System.nanoTime())).take(explorationCount)
+            } else {
+                explorationPool
+            }
+            
+            // ── Step 5: Merge and apply diversity injection ──
+            val merged = (exploitationPicks + explorationPicks).toMutableList()
+            val diversified = applyDiversityInjection(merged, limit)
             
             // Cache the results
-            addToCache(cacheKey, filteredRecommendations)
-            
-            return@withContext Resource.Success(filteredRecommendations)
+            addToCache(cacheKey, diversified)
+
+            val elapsed = System.currentTimeMillis() - recsStart
+            ErrorLogManager.logEvent(TAG, "RECS", "Recommendation generation completed in ${elapsed}ms — ${diversified.size} items (candidates=${candidatePool.size}, unique=${uniqueCandidates.size})")
+
+            return@withContext Resource.Success(diversified)
         } catch (e: Exception) {
             Log.e(TAG, "Error getting recommendations", e)
+            ErrorLogManager.logEvent(TAG, "ERROR", "Recommendation generation failed: ${e.message}")
             return@withContext Resource.Error("Error getting recommendations: ${e.message}")
         }
+    }
+    
+    /**
+     * Calculate a Twitter-style composite score for ranking content.
+     */
+    private fun calculateTwitterScore(content: AnimeContent, user: User): Double {
+        var score = 0.0
+        
+        // ── 1. Content-user affinity (genre match) ──
+        val preferredGenres = user.genrePreferences.toSet()
+        val dislikedGenres = userPreferenceModel.getDislikedGenres().toSet()
+        
+        for (genre in content.genres) {
+            if (genre in preferredGenres) score += W_GENRE_AFFINITY
+            if (genre in dislikedGenres) score += W_GENRE_NEGATIVE
+        }
+        
+        // ── 2. Learned preference weights from interaction history ──
+        val topGenres = userPreferenceModel.getTopGenres(10)
+        for (genre in content.genres) {
+            if (genre in topGenres) score += W_LEARNED_GENRE
+        }
+        
+        // ── 3. Content type preference ──
+        // contentPreferences stores "anime", "manga", "novels" (with 's').
+        // ContentType.NOVEL.name.lowercase() == "novel" so we normalise.
+        val contentTypeName = when (content.type) {
+            ContentType.ANIME -> "anime"
+            ContentType.MANGA -> "manga"
+            ContentType.NOVEL -> "novels"
+        }
+        if (contentTypeName in user.contentPreferences) {
+            score += W_CONTENT_TYPE_MATCH
+        }
+        
+        // ── 4. Social proof: MAL score (normalised 0-10 → 0-W) ──
+        if (content.malScore > 0) {
+            score += (content.malScore / 10.0) * W_MAL_SCORE
+        }
+        
+        // ── 5. Social proof: Popularity (log-scaled to avoid domination) ──
+        if (content.rating > 0) {
+            score += ln(content.rating + 1.0) * W_POPULARITY * 0.3
+        }
+        
+        // ── 6. Temporal boost ──
+        val statusLower = content.airingStatus.lowercase()
+        if (statusLower.contains("airing") || statusLower.contains("currently")) {
+            score += W_AIRING_BOOST
+        } else if (content.releaseYear != null) {
+            val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+            if (currentYear - content.releaseYear <= 2) {
+                score += W_RECENT_BOOST
+            }
+        }
+        
+        // ── 7. Small random jitter to prevent identical rankings ──
+        score += Random.nextDouble(0.0, 1.5)
+        
+        return score
+    }
+    
+    /**
+     * Apply diversity injection (adapted from Twitter's diversity mixer).
+     * Ensures no single genre dominates the feed.
+     */
+    private fun applyDiversityInjection(items: MutableList<AnimeContent>, limit: Int): List<AnimeContent> {
+        if (items.size <= 1) return items.take(limit)
+        
+        val result = mutableListOf<AnimeContent>()
+        val genreCounts = mutableMapOf<String, Int>()
+        val maxPerGenre = (limit * MAX_SAME_GENRE_RATIO).toInt().coerceAtLeast(2)
+        
+        // First pass: add items respecting genre caps
+        for (item in items) {
+            if (result.size >= limit) break
+            
+            val dominantGenre = item.genres.firstOrNull() ?: "Unknown"
+            val currentCount = genreCounts.getOrDefault(dominantGenre, 0)
+            
+            if (currentCount < maxPerGenre) {
+                result.add(item)
+                genreCounts[dominantGenre] = currentCount + 1
+            }
+        }
+        
+        // Second pass: fill remaining slots with any items not yet added
+        if (result.size < limit) {
+            val resultIds = result.map { it.id }.toSet()
+            for (item in items) {
+                if (result.size >= limit) break
+                if (item.id !in resultIds) {
+                    result.add(item)
+                }
+            }
+        }
+        
+        // Final shuffle within small windows to add natural feel
+        // (Twitter interleaves ranked items with exploration items)
+        return shuffleInWindows(result, windowSize = 4)
+    }
+    
+    /**
+     * Shuffle items within fixed-size windows to add variety
+     * while preserving approximate rank ordering.
+     */
+    private fun shuffleInWindows(items: List<AnimeContent>, windowSize: Int): List<AnimeContent> {
+        val result = mutableListOf<AnimeContent>()
+        val rng = Random(System.nanoTime())
+        
+        var i = 0
+        while (i < items.size) {
+            val end = min(i + windowSize, items.size)
+            val window = items.subList(i, end).toMutableList()
+            window.shuffle(rng)
+            result.addAll(window)
+            i = end
+        }
+        return result
     }
     
     override suspend fun getRecommendationsForType(
@@ -80,58 +286,85 @@ class BasicRecommendationEngine(
         limit: Int
     ): Resource<List<AnimeContent>> = withContext(Dispatchers.IO) {
         try {
-            // Check cache first
-            val cacheKey = "recommendations_${user.name}_${contentType}_$limit"
+            val cacheKey = "type_${user.name}_${contentType}_$limit"
             val cachedRecommendations = getFromCache(cacheKey)
             if (cachedRecommendations != null) {
                 return@withContext Resource.Success(cachedRecommendations)
             }
             
-            // Get user preferences
             val genres = user.genrePreferences
+            val allItems = mutableListOf<AnimeContent>()
             
-            // Get recommendations based on content type
-            val recommendationsResource = when (contentType) {
-                "anime" -> repository.getAnimeRecommendations(genres, limit * 2)
-                "manga" -> repository.getMangaRecommendations(genres, limit * 2)
-                "novels" -> repository.getNovelRecommendations(genres, limit * 2)
-                else -> Resource.Error("Invalid content type: $contentType")
+            // Normalise "novel" → "novels" so the chip filter value works
+            val normalizedType = if (contentType == "novel") "novels" else contentType
+            
+            // ── Fetch from multiple ranking types for diversity ──
+            val rankingTypes = when (normalizedType) {
+                "anime" -> ANIME_RANKING_TYPES
+                "manga" -> MANGA_RANKING_TYPES
+                "novels" -> listOf("novels", "bypopularity")
+                else -> listOf("all")
             }
             
-            // Process recommendations
-            if (recommendationsResource is Resource.Success) {
-                val recommendations = recommendationsResource.data
-                
-                // Filter out not interested items
-                val notInterestedResource = repository.getNotInterestedIds()
-                val notInterestedIds = if (notInterestedResource is Resource.Success) {
-                    notInterestedResource.data
-                } else {
-                    emptyList()
+            val perRankingLimit = (limit * 2) / rankingTypes.size
+            
+            for (rankingType in rankingTypes) {
+                try {
+                    val result = when (normalizedType) {
+                        "anime" -> repository.getAnimeRecommendations(genres, perRankingLimit, rankingType)
+                        "manga" -> repository.getMangaRecommendations(genres, perRankingLimit, rankingType)
+                        "novels" -> repository.getNovelRecommendations(genres, perRankingLimit, rankingType)
+                        else -> Resource.Error("Invalid content type: $normalizedType")
+                    }
+                    if (result is Resource.Success) {
+                        allItems.addAll(result.data)
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to fetch $rankingType for $contentType", e)
                 }
-                
-                val filteredRecommendations = recommendations.filter { it.id !in notInterestedIds }
-                
-                // Sort recommendations based on user preferences
-                val sortedRecommendations = userPreferenceModel.rankContentForUser(
-                    filteredRecommendations,
-                    user
-                )
-                
-                // Limit to requested number
-                val limitedRecommendations = sortedRecommendations.take(limit)
-                
-                // Cache the results
-                addToCache(cacheKey, limitedRecommendations)
-                
-                return@withContext Resource.Success(limitedRecommendations)
-            } else if (recommendationsResource is Resource.Error) {
-                return@withContext Resource.Error(recommendationsResource.message)
-            } else {
-                return@withContext Resource.Error("Unknown error getting recommendations")
             }
+            
+            // Also try the MAL suggestions endpoint for anime
+            if (normalizedType == "anime") {
+                try {
+                    val suggestionsResult = repository.getRecommendations(limit)
+                    if (suggestionsResult is Resource.Success) {
+                        allItems.addAll(suggestionsResult.data)
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to fetch MAL suggestions", e)
+                }
+            }
+            
+            // De-duplicate
+            val uniqueItems = allItems.distinctBy { it.id }
+            
+            // Filter by genres if provided
+            val filtered = if (genres.isNotEmpty()) {
+                val genreSet = genres.toSet()
+                uniqueItems.filter { item ->
+                    item.genres.any { it in genreSet }
+                }
+            } else {
+                uniqueItems
+            }
+            
+            // Filter out not-interested and already-watched
+            val notInterestedIds = (repository.getNotInterestedIds() as? Resource.Success)?.data ?: emptyList()
+            val userAnimeIds = (repository.getUserAnimeList(null) as? Resource.Success)
+                ?.data?.map { it.id }?.toSet() ?: emptySet()
+            val userMangaIds = (repository.getUserMangaList(null) as? Resource.Success)
+                ?.data?.map { it.id }?.toSet() ?: emptySet()
+            val exclusionSet = notInterestedIds.toSet() + userAnimeIds + userMangaIds
+            val cleanList = filtered.filter { it.id !in exclusionSet }
+            
+            val limitedList = cleanList.take(limit)
+            addToCache(cacheKey, limitedList)
+            
+            return@withContext Resource.Success(limitedList)
         } catch (e: Exception) {
             Log.e(TAG, "Error getting recommendations for type $contentType", e)
+            ErrorLogManager.logEvent(TAG, "ERROR", "Recs for type $contentType failed: ${e.message}")
             return@withContext Resource.Error("Error getting recommendations: ${e.message}")
         }
     }
@@ -141,20 +374,17 @@ class BasicRecommendationEngine(
         limit: Int
     ): Resource<List<AnimeContent>> = withContext(Dispatchers.IO) {
         try {
-            // Check cache first
             val cacheKey = "similar_${contentId}_$limit"
             val cachedRecommendations = getFromCache(cacheKey)
             if (cachedRecommendations != null) {
                 return@withContext Resource.Success(cachedRecommendations)
             }
             
-            // First, get the content details to determine its type and genres
             val contentResource = repository.getAnimeDetails(contentId)
             
             if (contentResource is Resource.Success) {
                 val content = contentResource.data
                 
-                // Get similar content based on content type
                 val similarResource = when (content.type) {
                     ContentType.ANIME -> repository.getAnimeRecommendations(content.genres, limit * 2)
                     ContentType.MANGA -> repository.getMangaRecommendations(content.genres, limit * 2)
@@ -162,15 +392,12 @@ class BasicRecommendationEngine(
                 }
                 
                 if (similarResource is Resource.Success) {
-                    // Filter out the original content and sort by similarity
                     val filteredContent = similarResource.data
                         .filter { it.id != contentId }
                         .sortedByDescending { calculateSimilarity(content, it) }
                         .take(limit)
                     
-                    // Cache the results
                     addToCache(cacheKey, filteredContent)
-                    
                     return@withContext Resource.Success(filteredContent)
                 } else if (similarResource is Resource.Error) {
                     return@withContext Resource.Error(similarResource.message)
@@ -182,6 +409,7 @@ class BasicRecommendationEngine(
             return@withContext Resource.Error("Failed to get similar content")
         } catch (e: Exception) {
             Log.e(TAG, "Error getting similar content for ID $contentId", e)
+            ErrorLogManager.logEvent(TAG, "ERROR", "Similar content for ID=$contentId failed: ${e.message}")
             return@withContext Resource.Error("Error getting similar content: ${e.message}")
         }
     }
@@ -191,7 +419,6 @@ class BasicRecommendationEngine(
         interactionType: RecommendationEngine.InteractionType
     ): Resource<Boolean> = withContext(Dispatchers.IO) {
         try {
-            // First, we need to get the content to know its type
             val contentResource = repository.getAnimeDetails(contentId)
             
             if (contentResource !is Resource.Success) {
@@ -200,56 +427,42 @@ class BasicRecommendationEngine(
             
             val content = contentResource.data
             
-            // Handle different interaction types
             when (interactionType) {
                 RecommendationEngine.InteractionType.LIKE -> {
-                    // Add to watchlist
                     val status = when (content.type) {
                         ContentType.ANIME -> "plan_to_watch"
                         ContentType.MANGA, ContentType.NOVEL -> "plan_to_read"
                     }
-                    
                     val result = when (content.type) {
                         ContentType.ANIME -> repository.updateAnimeStatus(contentId, status)
                         ContentType.MANGA, ContentType.NOVEL -> repository.updateMangaStatus(contentId, status)
                     }
-                    
-                    // Update user preference model with this interaction
                     userPreferenceModel.updatePreferencesFromInteraction(content, true)
-                    
                     return@withContext result
                 }
                 RecommendationEngine.InteractionType.DISLIKE -> {
-                    // Mark as not interested
                     val result = repository.markAsNotInterested(contentId)
-                    
-                    // Update user preference model with this interaction
                     userPreferenceModel.updatePreferencesFromInteraction(content, false)
-                    
+                    // Clear recommendation cache so disliked genres are deprioritised immediately
+                    recommendationCache.clear()
                     return@withContext result
                 }
                 RecommendationEngine.InteractionType.SUPER_LIKE -> {
-                    // Mark as completed
-                    val status = "completed"
-                    
                     val result = when (content.type) {
-                        ContentType.ANIME -> repository.updateAnimeStatus(contentId, status)
-                        ContentType.MANGA, ContentType.NOVEL -> repository.updateMangaStatus(contentId, status)
+                        ContentType.ANIME -> repository.updateAnimeStatus(contentId, "completed")
+                        ContentType.MANGA, ContentType.NOVEL -> repository.updateMangaStatus(contentId, "completed")
                     }
-                    
-                    // Update user preference model with this interaction (stronger positive)
                     userPreferenceModel.updatePreferencesFromInteraction(content, true, weight = 2.0)
-                    
                     return@withContext result
                 }
                 RecommendationEngine.InteractionType.VIEW_DETAILS -> {
-                    // No API update needed, just record the interaction locally
                     userPreferenceModel.updatePreferencesFromInteraction(content, true, weight = 0.5)
                     return@withContext Resource.Success(true)
                 }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error recording interaction for ID $contentId", e)
+            ErrorLogManager.logEvent(TAG, "ERROR", "Interaction for ID=$contentId failed: ${e.message}")
             return@withContext Resource.Error("Error recording interaction: ${e.message}")
         }
     }
@@ -260,59 +473,29 @@ class BasicRecommendationEngine(
             return@withContext Resource.Success(true)
         } catch (e: Exception) {
             Log.e(TAG, "Error clearing cache", e)
+            ErrorLogManager.logEvent(TAG, "ERROR", "Cache clear failed: ${e.message}")
             return@withContext Resource.Error("Error clearing cache: ${e.message}")
         }
     }
     
     /**
      * Calculate similarity score between two content items.
-     * Higher scores indicate more similarity.
      */
     private fun calculateSimilarity(content1: AnimeContent, content2: AnimeContent): Double {
         var score = 0.0
         
-        // Genre similarity (most important)
         val genreOverlap = content1.genres.intersect(content2.genres.toSet()).size
         score += genreOverlap * 10.0
         
-        // Rating similarity
         if (content1.rating > 0 && content2.rating > 0) {
             val ratingDiff = Math.abs(content1.rating - content2.rating)
             score += (10.0 - ratingDiff) * 2.0
         }
         
-        // Same type
-        if (content1.type == content2.type) {
-            score += 5.0
-        }
-        
-        // Same status (airing, completed, etc.)
-        if (content1.status == content2.status) {
-            score += 3.0
-        }
+        if (content1.type == content2.type) score += 5.0
+        if (content1.status == content2.status) score += 3.0
         
         return score
-    }
-    
-    /**
-     * Filter and sort recommendations based on user preferences.
-     */
-    private fun filterAndSortRecommendations(
-        recommendations: List<AnimeContent>,
-        user: User,
-        limit: Int
-    ): List<AnimeContent> {
-        // Filter out duplicates
-        val uniqueRecommendations = recommendations.distinctBy { it.id }
-        
-        // Sort by user preferences
-        val sortedRecommendations = userPreferenceModel.rankContentForUser(
-            uniqueRecommendations,
-            user
-        )
-        
-        // Limit to requested number
-        return sortedRecommendations.take(min(limit, sortedRecommendations.size))
     }
     
     /**
@@ -322,13 +505,9 @@ class BasicRecommendationEngine(
         val cachedValue = recommendationCache[key]
         if (cachedValue != null) {
             val (recommendations, timestamp) = cachedValue
-            val currentTime = System.currentTimeMillis()
-            
-            // Check if cache is still valid
-            if (currentTime - timestamp < CACHE_EXPIRATION) {
+            if (System.currentTimeMillis() - timestamp < CACHE_EXPIRATION) {
                 return recommendations
             } else {
-                // Remove expired cache entry
                 recommendationCache.remove(key)
             }
         }

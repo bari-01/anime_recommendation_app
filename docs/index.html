@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeRec - Smart Anime & Manga Recommendations</title>
+    <meta name="description" content="Discover your next favorite anime, manga, or light novel with AnimeRec — a smart recommendation app powered by MyAnimeList.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5A52D5;
+            --accent: #FF6584;
+            --bg: #0F0E17;
+            --bg-card: #1A1929;
+            --bg-card-hover: #232238;
+            --text: #FFFFFE;
+            --text-muted: #A7A9BE;
+            --gradient: linear-gradient(135deg, #6C63FF 0%, #FF6584 100%);
+            --radius: 16px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        a { color: var(--primary); text-decoration: none; }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40%; left: -20%;
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(108,99,255,.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%; right: -15%;
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(255,101,132,.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-content { max-width: 720px; position: relative; z-index: 1; }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(108,99,255,.15);
+            color: var(--primary);
+            padding: .4rem 1rem;
+            border-radius: 999px;
+            font-size: .85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(108,99,255,.3);
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+        }
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 540px;
+            margin: 0 auto 2.5rem;
+        }
+        .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .85rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary {
+            background: var(--gradient);
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(108,99,255,.35);
+        }
+        .btn-primary:hover { box-shadow: 0 8px 32px rgba(108,99,255,.45); }
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid rgba(255,255,255,.15);
+        }
+        .btn-outline:hover { border-color: var(--primary); }
+
+        /* Nav */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1rem 2rem;
+            background: rgba(15,14,23,.85);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .logo span { color: var(--primary); }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        nav a {
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color .2s;
+        }
+        nav a:hover { color: var(--text); }
+
+        /* Sections */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .section-label {
+            display: inline-block;
+            background: rgba(108,99,255,.12);
+            color: var(--primary);
+            padding: .3rem .85rem;
+            border-radius: 999px;
+            font-size: .8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: .75rem;
+        }
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        /* Features grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: background .2s, transform .2s;
+        }
+        .feature-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+        }
+        .feature-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: .5rem;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: .95rem;
+        }
+
+        /* Screenshots mockup */
+        .screenshots {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+        .phone-mockup {
+            width: 240px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 28px;
+            padding: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.4);
+            transition: transform .3s;
+        }
+        .phone-mockup:hover { transform: translateY(-8px); }
+        .phone-screen {
+            background: #1E1D2F;
+            border-radius: 20px;
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .phone-screen .screen-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .phone-screen h4 { font-size: 1rem; margin-bottom: .5rem; }
+        .phone-screen p { font-size: .8rem; color: var(--text-muted); }
+
+        /* Setup / API Key */
+        .setup-section { background: var(--bg-card); border-radius: var(--radius); padding: 3rem; margin-top: 2rem; border: 1px solid rgba(255,255,255,.06); }
+        .step { display: flex; gap: 1.5rem; margin-bottom: 2rem; align-items: flex-start; }
+        .step:last-child { margin-bottom: 0; }
+        .step-number {
+            background: var(--gradient);
+            color: #fff;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .9rem;
+            flex-shrink: 0;
+        }
+        .step-content h3 { font-size: 1.05rem; margin-bottom: .4rem; }
+        .step-content p { color: var(--text-muted); font-size: .95rem; }
+        .step-content code {
+            background: rgba(108,99,255,.12);
+            color: var(--primary);
+            padding: .15rem .5rem;
+            border-radius: 6px;
+            font-size: .85rem;
+        }
+
+        /* Download */
+        .download-section {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+        .download-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: var(--radius);
+            padding: 3rem;
+            max-width: 560px;
+            margin: 2rem auto 0;
+        }
+
+        /* Tech stack */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .tech-badge {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,.08);
+            padding: .6rem 1.2rem;
+            border-radius: 10px;
+            font-size: .9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: border-color .2s;
+        }
+        .tech-badge:hover { border-color: var(--primary); color: var(--text); }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-size: .85rem;
+            border-top: 1px solid rgba(255,255,255,.06);
+        }
+        footer a { color: var(--primary); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul { display: none; }
+            .features-grid { grid-template-columns: 1fr; }
+            .phone-mockup { width: 200px; }
+            .phone-screen { height: 340px; }
+            .step { flex-direction: column; gap: .75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">Anime<span>Rec</span></div>
+    <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#screens">Screens</a></li>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#tech">Tech Stack</a></li>
+        <li><a href="#download">Download</a></li>
+    </ul>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">Android 12+ &bull; Open Source</div>
+        <h1>Discover Your Next<br><span>Anime &amp; Manga</span></h1>
+        <p>Swipe through personalized recommendations powered by MyAnimeList. Like Tinder, but for anime, manga, and light novels.</p>
+        <div class="btn-group">
+            <a href="#download" class="btn btn-primary">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Download APK
+            </a>
+            <a href="https://github.com" class="btn btn-outline">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                View Source
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<section id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything You Need</h2>
+    <p class="section-subtitle">Built for anime fans who want smarter discovery without the overwhelming lists.</p>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(108,99,255,.15);">&#x1F0CF;</div>
+            <h3>Swipe to Discover</h3>
+            <p>Card-based swiping interface — swipe right to add to watchlist, left to skip, up to mark as completed.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(255,101,132,.15);">&#x1F9E0;</div>
+            <h3>Smart Recommendations</h3>
+            <p>Multi-source recommendation engine that learns your taste from your MAL history and preferences.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(0,206,209,.15);">&#x1F4DA;</div>
+            <h3>Anime, Manga &amp; Novels</h3>
+            <p>Supports all three content types with dedicated browsing, watchlists, and reading lists.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(255,193,7,.15);">&#x1F4CA;</div>
+            <h3>Your Stats at a Glance</h3>
+            <p>View your watching, completed, on-hold, and plan-to-watch statistics synced from MyAnimeList.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(76,175,80,.15);">&#x1F50D;</div>
+            <h3>Detailed Info</h3>
+            <p>Full details with synopsis, genres, ratings, trailers, and similar content recommendations.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(233,30,99,.15);">&#x1F512;</div>
+            <h3>Secure MAL Login</h3>
+            <p>OAuth2 with PKCE flow for secure authentication. Your credentials never touch our servers.</p>
+        </div>
+    </div>
+</section>
+
+<!-- App Screens -->
+<section id="screens">
+    <div class="section-label">App Screens</div>
+    <h2 class="section-title">A Peek Inside</h2>
+    <p class="section-subtitle">Clean Material Design 3 interface with smooth navigation and intuitive controls.</p>
+    <div class="screenshots">
+        <div class="phone-mockup">
+            <div class="phone-screen">
+                <div class="screen-icon">&#x1F3B4;</div>
+                <h4>Home / Swipe</h4>
+                <p>Card stack with anime posters. Swipe to decide, tap to read more.</p>
+            </div>
+        </div>
+        <div class="phone-mockup">
+            <div class="phone-screen">
+                <div class="screen-icon">&#x1F4D6;</div>
+                <h4>Details</h4>
+                <p>Synopsis, genres, score, status, trailer link, and similar content.</p>
+            </div>
+        </div>
+        <div class="phone-mockup">
+            <div class="phone-screen">
+                <div class="screen-icon">&#x1F4CB;</div>
+                <h4>Watchlist</h4>
+                <p>Track your plan-to-watch, reading, and completed lists in one place.</p>
+            </div>
+        </div>
+        <div class="phone-mockup">
+            <div class="phone-screen">
+                <div class="screen-icon">&#x1F464;</div>
+                <h4>Profile</h4>
+                <p>MAL stats, genre preferences, content type filters, and logout.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Setup -->
+<section id="setup">
+    <div class="section-label">Getting Started</div>
+    <h2 class="section-title">API Key Setup</h2>
+    <p class="section-subtitle">AnimeRec uses the MyAnimeList API v2. Here's how to get your own API key:</p>
+    <div class="setup-section">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h3>Create a MAL Account</h3>
+                <p>If you don't have one, sign up at <a href="https://myanimelist.net" target="_blank">myanimelist.net</a>.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h3>Register an API Application</h3>
+                <p>Go to <a href="https://myanimelist.net/apiconfig" target="_blank">myanimelist.net/apiconfig</a> and click <strong>"Create ID"</strong>. Fill in your app name, description, and set the redirect URL to <code>animerec://callback</code>.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h3>Copy Your Client ID</h3>
+                <p>After registration, copy the <strong>Client ID</strong> from your API application page.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h3>Update the App</h3>
+                <p>Open <code>AnimeRecApp.kt</code> and replace the <code>CLIENT_ID</code> constant with your own:</p>
+                <p style="margin-top:.75rem;"><code>const val CLIENT_ID = "your_client_id_here"</code></p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+                <h3>Build &amp; Run</h3>
+                <p>Connect an Android 12+ device or emulator and run <code>./gradlew assembleDebug</code> to build your APK.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tech Stack -->
+<section id="tech">
+    <div class="section-label">Under the Hood</div>
+    <h2 class="section-title">Tech Stack</h2>
+    <p class="section-subtitle">Modern Android development with robust architecture and proven libraries.</p>
+    <div class="tech-grid">
+        <div class="tech-badge">Kotlin 1.9</div>
+        <div class="tech-badge">Android 12+ (API 31)</div>
+        <div class="tech-badge">MVVM Architecture</div>
+        <div class="tech-badge">Navigation Component</div>
+        <div class="tech-badge">ViewBinding</div>
+        <div class="tech-badge">Retrofit 2.9</div>
+        <div class="tech-badge">OkHttp 4.12</div>
+        <div class="tech-badge">Glide 4.16</div>
+        <div class="tech-badge">CardStackView</div>
+        <div class="tech-badge">Material Design 3</div>
+        <div class="tech-badge">Coroutines</div>
+        <div class="tech-badge">LiveData</div>
+        <div class="tech-badge">DataStore</div>
+        <div class="tech-badge">SafeArgs</div>
+        <div class="tech-badge">EncryptedSharedPrefs</div>
+        <div class="tech-badge">OAuth2 + PKCE</div>
+    </div>
+</section>
+
+<!-- Download -->
+<section id="download" class="download-section">
+    <div class="section-label">Get the App</div>
+    <h2 class="section-title">Download AnimeRec</h2>
+    <p class="section-subtitle" style="margin:0 auto 0;">Requires Android 12 or later.</p>
+    <div class="download-card">
+        <p style="font-size:3rem;margin-bottom:1rem;">&#x1F4F1;</p>
+        <h3 style="font-size:1.25rem;margin-bottom:.5rem;">AnimeRec v1.0.0</h3>
+        <p style="color:var(--text-muted);margin-bottom:1.5rem;">Debug build &bull; ~22 MB &bull; Android 12+</p>
+        <a href="https://github.com/your-username/anime_recommendation_app/releases/latest/download/app-debug.apk" class="btn btn-primary" style="display:inline-flex;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Download APK
+        </a>
+        <p style="color:var(--text-muted);font-size:.8rem;margin-top:1rem;">
+            You may need to enable "Install from unknown sources" in your device settings.
+        </p>
+    </div>
+</section>
+
+<footer>
+    <p>Built with &#x2764;&#xFE0F; for anime fans &bull; Powered by <a href="https://myanimelist.net" target="_blank">MyAnimeList API</a></p>
+    <p style="margin-top:.5rem;">&copy; 2025 AnimeRec. Open-source under MIT License.</p>
+</footer>
+
+<script>
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+    
+    // Fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.feature-card, .phone-mockup, .step, .tech-badge').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity .6s ease, transform .6s ease';
+        observer.observe(el);
+    });
+</script>
+
+</body>
+</html>

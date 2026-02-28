@@ -1,4 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Author: Shuvam Banerji Seal | AnimeMate | MIT License -->
 <resources>
-    <string name="app_name">Anime recommedation app</string>
+    <string name="app_name">AnimeMate</string>
+    <string name="tagline">Discover Anime, Manga &amp; Novels</string>
+    
+    <!-- Login Screen -->
+    <string name="welcome_title">Welcome to AnimeMate</string>
+    <string name="welcome_subtitle">Connect with MyAnimeList to get personalized recommendations based on your taste</string>
+    <string name="login_with_mal">Login with MyAnimeList</string>
+    <string name="privacy_notice">By logging in, you agree to our Terms of Service and Privacy Policy</string>
+    
+    <!-- Profile Setup -->
+    <string name="profile_setup_title">Set Up Your Profile</string>
+    <string name="profile_setup_subtitle">Tell us a bit about yourself to personalize your experience</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="username">Username</string>
+    <string name="display_name_hint">Display Name (optional)</string>
+    <string name="continue_text">Continue</string>
+    
+    <!-- Preferences -->
+    <string name="preferences_title">Your Preferences</string>
+    <string name="preferences_subtitle">Select what you want to discover and your favorite genres</string>
+    <string name="content_types_label">What do you want to discover?</string>
+    <string name="genres_label">Select your favorite genres</string>
+    <string name="save_and_start">Save &amp; Start Discovering</string>
+    
+    <!-- Home Screen -->
+    <string name="no_recommendations">No recommendations available.\nTry adjusting your preferences.</string>
+    <string name="anime_cover">Anime cover image</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_watchlist">Watchlist</string>
+    <string name="nav_history">History</string>
+    <string name="nav_profile">Profile</string>
+    
+    <!-- Actions -->
+    <string name="add_to_watchlist">Add to Watchlist</string>
+    <string name="mark_as_watched">Mark as Watched</string>
+    <string name="not_interested">Not Interested</string>
+    <string name="view_details">View Details</string>
+    
+    <!-- Details -->
+    <string name="synopsis">Synopsis</string>
+    <string name="similar_content">Similar Content</string>
+    <string name="episodes_format">%d episodes</string>
+    <string name="chapters_format">%d chapters</string>
+    <string name="volumes_format">%d volumes</string>
+    
+    <!-- Profile -->
+    <string name="logout">Logout</string>
+    <string name="edit_preferences">Edit Preferences</string>
+    <string name="anime_statistics">Anime Statistics</string>
+    <string name="watching">Watching</string>
+    <string name="completed">Completed</string>
+    <string name="on_hold">On Hold</string>
+    <string name="dropped">Dropped</string>
+    <string name="plan_to_watch">Plan to Watch</string>
+    
+    <!-- Errors -->
+    <string name="error_loading">Error loading content</string>
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_auth">Authentication failed. Please try again.</string>
 </resources>

@@ -1,12 +1,18 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.recommendation
 
-import android.util.Log
-import com.animerec.app.data.AnimeRepository
 import com.animerec.app.data.Resource
 import com.animerec.app.models.AnimeContent
 import com.animerec.app.models.User
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Main recommendation engine interface for the app.

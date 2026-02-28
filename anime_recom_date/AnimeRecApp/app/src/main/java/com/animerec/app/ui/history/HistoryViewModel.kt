@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.ui.history
 
 import android.app.Application
@@ -10,6 +20,7 @@ import com.animerec.app.AnimeRecApp
 import com.animerec.app.data.Resource
 import com.animerec.app.models.AnimeContent
 import com.animerec.app.models.ContentType
+import com.animerec.app.util.ErrorLogManager
 import kotlinx.coroutines.launch
 
 /**
@@ -40,6 +51,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 _historyItems.value = result
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading history", e)
+                ErrorLogManager.logEvent(TAG, "ERROR", "History load failed: ${e.message}")
                 _historyItems.value = Resource.Error("Failed to load history: ${e.message}")
             }
         }
@@ -70,7 +82,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error rating content", e)
-                // Could show error toast or update UI with error state
+                ErrorLogManager.logEvent(TAG, "ERROR", "Rating failed: ${e.message}")
             }
         }
     }
@@ -92,7 +104,7 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error updating status", e)
-                // Could show error toast or update UI with error state
+                ErrorLogManager.logEvent(TAG, "ERROR", "Status update failed: ${e.message}")
             }
         }
     }

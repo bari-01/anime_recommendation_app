@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.ui.common
 
 import android.os.Bundle
@@ -31,10 +41,7 @@ abstract class BaseFragment : Fragment() {
     
     override fun onDestroyView() {
         super.onDestroyView()
-        // Clear all Glide requests to prevent memory leaks
-        for (manager in requestManagers) {
-            manager.clear(null)
-        }
+        // Glide handles cleanup automatically via lifecycle
         requestManagers.clear()
     }
     

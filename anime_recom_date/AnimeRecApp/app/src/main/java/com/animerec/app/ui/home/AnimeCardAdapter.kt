@@ -1,3 +1,13 @@
+/*
+ * AnimeRec - Anime Recommendation App
+ * Copyright (C) 2025 Shuvam Banerji Seal
+ *
+ * Developed by: Shuvam Banerji Seal
+ * GitHub: https://github.com/technicallittlemaster
+ *
+ * This file is part of AnimeRec.
+ * Licensed under the MIT License.
+ */
 package com.animerec.app.ui.home
 
 import android.content.Context
@@ -11,10 +21,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.animerec.app.R
 import com.animerec.app.models.AnimeContent
+import com.animerec.app.models.ContentType
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 
@@ -36,11 +45,12 @@ class AnimeCardAdapter(private val context: Context) :
     }
     
     inner class AnimeCardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val coverImageView: ImageView = itemView.findViewById(R.id.anime_cover_image)
+        private val coverImageView: ImageView = itemView.findViewById(R.id.anime_image)
         private val titleTextView: TextView = itemView.findViewById(R.id.anime_title)
         private val genresTextView: TextView = itemView.findViewById(R.id.anime_genres)
         private val ratingTextView: TextView = itemView.findViewById(R.id.anime_rating)
-        private val synopsisTextView: TextView = itemView.findViewById(R.id.anime_synopsis)
+        private val typeTextView: TextView = itemView.findViewById(R.id.anime_type)
+        private val episodesTextView: TextView = itemView.findViewById(R.id.anime_episodes)
         
         fun bind(content: AnimeContent) {
             // Set title
@@ -51,20 +61,29 @@ class AnimeCardAdapter(private val context: Context) :
             
             // Set rating
             if (content.malScore > 0) {
-                ratingTextView.text = "★ ${String.format("%.1f", content.malScore)}"
+                ratingTextView.text = String.format("%.1f", content.malScore)
                 ratingTextView.visibility = View.VISIBLE
             } else {
                 ratingTextView.visibility = View.GONE
             }
             
-            // Set synopsis
-            synopsisTextView.text = content.synopsis
+            // Set type
+            typeTextView.text = when (content.type) {
+                ContentType.ANIME -> content.mediaType.ifEmpty { "TV" }
+                ContentType.MANGA -> "Manga"
+                ContentType.NOVEL -> "Novel"
+            }
             
-            // Load image with Glide with optimized settings
+            // Set episodes/chapters
+            episodesTextView.text = when (content.type) {
+                ContentType.ANIME -> content.episodes?.let { "$it eps" } ?: ""
+                ContentType.MANGA -> content.chapters?.let { "$it ch" } ?: ""
+                ContentType.NOVEL -> content.volumes?.let { "$it vol" } ?: ""
+            }
+            
+            // Load image with Glide
             if (content.imageUrl.isNotEmpty()) {
                 val requestOptions = RequestOptions()
-                    .placeholder(R.drawable.gradient_overlay)
-                    .error(R.drawable.gradient_overlay)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                 
                 Glide.with(context)
@@ -73,15 +92,7 @@ class AnimeCardAdapter(private val context: Context) :
                     .transition(DrawableTransitionOptions.withCrossFade(300))
                     .into(coverImageView)
             } else {
-                // Set placeholder if no image URL available
-                coverImageView.setImageResource(R.drawable.gradient_overlay)
-            }
-            
-            // Set content type indicator based on type
-            val typeIndicator = when (content.type) {
-                com.animerec.app.models.ContentType.ANIME -> R.drawable.gradient_overlay // Replace with specific indicators
-                com.animerec.app.models.ContentType.MANGA -> R.drawable.gradient_overlay
-                com.animerec.app.models.ContentType.NOVEL -> R.drawable.gradient_overlay
+                coverImageView.setImageResource(R.drawable.gradient_bottom)
             }
         }
     }
@@ -101,7 +112,7 @@ class AnimeCardAdapter(private val context: Context) :
     
     override fun onViewRecycled(holder: AnimeCardViewHolder) {
         super.onViewRecycled(holder)
-        // Clear the image when the view is recycled to prevent memory leaks
-        Glide.with(context).clear(holder.itemView.findViewById<ImageView>(R.id.anime_cover_image))
+        // Clear the image when the view is recycled
+        Glide.with(context).clear(holder.itemView.findViewById<ImageView>(R.id.anime_image))
     }
 }
