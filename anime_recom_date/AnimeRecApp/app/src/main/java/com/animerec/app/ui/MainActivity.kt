@@ -46,15 +46,31 @@ class MainActivity : AppCompatActivity() {
     /** Suppresses bottom nav listener from triggering navigation during programmatic selection */
     private var suppressBottomNavListener = false
 
+    private fun syncSystemBarColors() {
+        val typedValue = android.util.TypedValue()
+        
+        // Status bar
+        theme.resolveAttribute(android.R.attr.statusBarColor, typedValue, true)
+        window.statusBarColor = typedValue.data
+        
+        // Nav bar
+        theme.resolveAttribute(android.R.attr.navigationBarColor, typedValue, true)
+        window.navigationBarColor = typedValue.data
+        
+        // Icons (light/dark)
+        val isNightMode = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = !isNightMode
+            isAppearanceLightNavigationBars = !isNightMode
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Ensure content does not draw behind the status bar
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
-        // Apply saved theme preference before setContentView
-        val themePrefs = getSharedPreferences("theme_prefs", MODE_PRIVATE)
-        val nightMode = themePrefs.getInt("night_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        AppCompatDelegate.setDefaultNightMode(nightMode)
-        ErrorLogManager.logEvent(TAG, "THEME", "Applied night mode: $nightMode")
+        // Sync system bars with applied theme 
+        syncSystemBarColors()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

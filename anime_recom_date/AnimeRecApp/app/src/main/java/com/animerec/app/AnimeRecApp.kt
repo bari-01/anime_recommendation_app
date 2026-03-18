@@ -31,6 +31,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import androidx.appcompat.app.AppCompatDelegate
+import android.content.Context
 
 class AnimeRecApp : Application(), ComponentCallbacks2 {
 
@@ -86,6 +88,18 @@ class AnimeRecApp : Application(), ComponentCallbacks2 {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "Application initializing")
+        
+        // Apply saved theme preference early
+        val themePrefs = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+        val nightMode = themePrefs.getInt("night_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        // If not explicit, force MODE_NIGHT_NO or YES so it's applied definitively instead of waiting for system default
+        val actualNightMode = if (nightMode == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
+            val isSystemDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+            if (isSystemDark) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        } else {
+            nightMode
+        }
+        AppCompatDelegate.setDefaultNightMode(actualNightMode)
         
         // Install automatic crash logger — writes stack traces to files/logs/
         ErrorLogManager.installCrashHandler(this)
