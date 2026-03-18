@@ -349,6 +349,7 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        profilePictureImageView?.let { Glide.with(this).clear(it) }
         super.onDestroyView()
         ErrorLogManager.logEvent(TAG, "LIFECYCLE", "onDestroyView — nulling 16 view refs")
         profilePictureImageView = null

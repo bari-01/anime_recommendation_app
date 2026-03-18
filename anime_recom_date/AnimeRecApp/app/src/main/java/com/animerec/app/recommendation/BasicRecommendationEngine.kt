@@ -19,6 +19,8 @@ import com.animerec.app.models.User
 import com.animerec.app.util.ErrorLogManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlin.math.ln
 import kotlin.math.min
 import kotlin.random.Random
@@ -104,8 +106,13 @@ class BasicRecommendationEngine(
             val candidatePool = mutableListOf<AnimeContent>()
             val itemsPerType = (limit * 3) / contentTypes.size  // fetch 3× for filtering headroom
             
-            for (contentType in contentTypes) {
-                val typeResult = getRecommendationsForType(user, contentType, itemsPerType)
+            val deferredResults = contentTypes.map { contentType ->
+                async {
+                    getRecommendationsForType(user, contentType, itemsPerType)
+                }
+            }
+            val results = deferredResults.awaitAll()
+            for (typeResult in results) {
                 if (typeResult is Resource.Success) {
                     candidatePool.addAll(typeResult.data)
                 }
@@ -310,34 +317,44 @@ class BasicRecommendationEngine(
                 else -> listOf("all")
             }
             
-            val perRankingLimit = (limit * 2) / rankingTypes.size
+                        val perRankingLimit = (limit * 2) / rankingTypes.size
+            if (perRankingLimit < 1) return@withContext Resource.Error("Limit too small")
             
-            for (rankingType in rankingTypes) {
-                try {
-                    val result = when (normalizedType) {
-                        "anime" -> repository.getAnimeRecommendations(genres, perRankingLimit, rankingType)
-                        "manga" -> repository.getMangaRecommendations(genres, perRankingLimit, rankingType)
-                        "novels" -> repository.getNovelRecommendations(genres, perRankingLimit, rankingType)
-                        else -> Resource.Error("Invalid content type: $normalizedType")
+            val deferreds = rankingTypes.map { rankingType ->
+                async {
+                    try {
+                        val result = when (normalizedType) {
+                            "anime" -> repository.getAnimeRecommendations(genres, perRankingLimit, rankingType)
+                            "manga" -> repository.getMangaRecommendations(genres, perRankingLimit, rankingType)
+                            "novels" -> repository.getNovelRecommendations(genres, perRankingLimit, rankingType)
+                            else -> Resource.Error("Invalid content type: $normalizedType")
+                        }
+                        if (result is Resource.Success) result.data else emptyList()
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to fetch $rankingType for $contentType", e)
+                        emptyList()
                     }
-                    if (result is Resource.Success) {
-                        allItems.addAll(result.data)
-                    }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Failed to fetch $rankingType for $contentType", e)
                 }
             }
             
-            // Also try the MAL suggestions endpoint for anime
-            if (normalizedType == "anime") {
-                try {
-                    val suggestionsResult = repository.getRecommendations(limit)
-                    if (suggestionsResult is Resource.Success) {
-                        allItems.addAll(suggestionsResult.data)
+            val suggestionsDeferred: kotlinx.coroutines.Deferred<List<AnimeContent>>? = if (normalizedType == "anime") {
+                async {
+                    try {
+                        val suggestionsResult = repository.getRecommendations(limit)
+                        if (suggestionsResult is Resource.Success) suggestionsResult.data else emptyList()
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to fetch MAL suggestions", e)
+                        emptyList()
                     }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Failed to fetch MAL suggestions", e)
                 }
+            } else null
+            
+            val results = deferreds.awaitAll()
+            for (res in results) {
+                allItems.addAll(res)
+            }
+            if (suggestionsDeferred != null) {
+                allItems.addAll(suggestionsDeferred.await())
             }
             
             // De-duplicate

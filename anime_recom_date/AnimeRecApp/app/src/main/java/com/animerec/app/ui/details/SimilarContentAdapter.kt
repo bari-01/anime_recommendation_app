@@ -84,4 +84,9 @@ class SimilarContentAdapter(
             return oldItem == newItem
         }
     }
+
+    override fun onViewRecycled(holder: SimilarContentViewHolder) {
+        super.onViewRecycled(holder)
+        Glide.with(context).clear(holder.itemView.findViewById<ImageView>(R.id.coverImageView))
+    }
 }

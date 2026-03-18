@@ -154,4 +154,9 @@ class WatchlistAdapter(
             return oldItem == newItem
         }
     }
+
+    override fun onViewRecycled(holder: WatchlistViewHolder) {
+        super.onViewRecycled(holder)
+        Glide.with(context).clear(holder.itemView.findViewById<ImageView>(R.id.coverImageView))
+    }
 }

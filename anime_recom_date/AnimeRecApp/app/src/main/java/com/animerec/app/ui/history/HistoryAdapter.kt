@@ -126,4 +126,9 @@ class HistoryAdapter(
             return oldItem == newItem
         }
     }
+
+    override fun onViewRecycled(holder: HistoryViewHolder) {
+        super.onViewRecycled(holder)
+        Glide.with(context).clear(holder.itemView.findViewById<ImageView>(R.id.coverImageView))
+    }
 }

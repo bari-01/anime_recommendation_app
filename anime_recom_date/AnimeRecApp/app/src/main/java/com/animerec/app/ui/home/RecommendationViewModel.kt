@@ -28,6 +28,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
 
 /**
  * ViewModel for handling recommendations in the home screen.
@@ -76,7 +77,7 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
             val recommendations = prefetchedRecommendations.toList()
             prefetchedRecommendations.clear()
             allRecommendations = recommendations
-            _recommendations.value = Resource.Success(applyMediaFilter(recommendations))
+            _recommendations.postValue(Resource.Success(applyMediaFilter(recommendations)))
             
             // Start prefetching more in the background
             startPrefetching()
@@ -85,14 +86,14 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
         
         // Otherwise, load from the engine
         isLoading = true
-        _recommendations.value = Resource.Loading
+        _recommendations.postValue(Resource.Loading)
         
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 // Get user profile
                 val userResource = repository.getUserProfile()
                 if (userResource !is Resource.Success) {
-                    _recommendations.value = Resource.Error("Failed to load user profile")
+                    _recommendations.postValue(Resource.Error("Failed to load user profile"))
                     isLoading = false
                     return@launch
                 }
@@ -104,16 +105,16 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
                 
                 if (recommendationsResource is Resource.Success) {
                     allRecommendations = recommendationsResource.data
-                    _recommendations.value = Resource.Success(applyMediaFilter(recommendationsResource.data))
+                    _recommendations.postValue(Resource.Success(applyMediaFilter(recommendationsResource.data)))
                 } else {
-                    _recommendations.value = recommendationsResource
+                    _recommendations.postValue(recommendationsResource)
                 }
                 hasMoreData = (recommendationsResource is Resource.Success) && 
                              (recommendationsResource.data.isNotEmpty())
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading recommendations", e)
                 ErrorLogManager.logEvent(TAG, "ERROR", "Error loading recommendations: ${e.message}")
-                _recommendations.value = Resource.Error("Error loading recommendations: ${e.message}")
+                _recommendations.postValue(Resource.Error("Error loading recommendations: ${e.message}"))
             } finally {
                 isLoading = false
             }
@@ -144,9 +145,9 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
             // The current pool has no items of this type — fetch them from the engine
             loadRecommendationsForType(filter)
         } else if (filtered.isEmpty()) {
-            _recommendations.value = Resource.Error("No content found. Try a different filter.")
+            _recommendations.postValue(Resource.Error("No content found. Try a different filter."))
         } else {
-            _recommendations.value = Resource.Success(filtered)
+            _recommendations.postValue(Resource.Success(filtered))
         }
     }
     
@@ -158,13 +159,13 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
         if (isLoading) return
         
         isLoading = true
-        _recommendations.value = Resource.Loading
+        _recommendations.postValue(Resource.Loading)
         
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val userResource = repository.getUserProfile()
                 if (userResource !is Resource.Success) {
-                    _recommendations.value = Resource.Error("Failed to load user profile")
+                    _recommendations.postValue(Resource.Error("Failed to load user profile"))
                     isLoading = false
                     return@launch
                 }
@@ -178,16 +179,16 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
                     val unique = result.data.filter { it.id !in existingIds }
                     allRecommendations = allRecommendations + unique
                     
-                    _recommendations.value = Resource.Success(result.data)
+                    _recommendations.postValue(Resource.Success(result.data))
                 } else if (result is Resource.Success) {
-                    _recommendations.value = Resource.Error("No $contentType content available right now.")
+                    _recommendations.postValue(Resource.Error("No $contentType content available right now."))
                 } else if (result is Resource.Error) {
-                    _recommendations.value = Resource.Error(result.message)
+                    _recommendations.postValue(Resource.Error(result.message))
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading $contentType recommendations", e)
                 ErrorLogManager.logEvent(TAG, "ERROR", "Error loading $contentType recs: ${e.message}")
-                _recommendations.value = Resource.Error("Error loading $contentType: ${e.message}")
+                _recommendations.postValue(Resource.Error("Error loading $contentType: ${e.message}"))
             } finally {
                 isLoading = false
             }
@@ -223,7 +224,7 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
                 
                 allRecommendations = allRecommendations + additionalRecommendations
                 val filtered = applyMediaFilter(allRecommendations)
-                _recommendations.value = Resource.Success(filtered)
+                _recommendations.postValue(Resource.Success(filtered))
                 
                 // Start prefetching more in the background
                 startPrefetching()
@@ -234,12 +235,12 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
         // Otherwise, load from the engine
         isLoading = true
         
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 // Get user profile
                 val userResource = repository.getUserProfile()
                 if (userResource !is Resource.Success) {
-                    _recommendations.value = Resource.Error("Failed to load user profile")
+                    _recommendations.postValue(Resource.Error("Failed to load user profile"))
                     isLoading = false
                     return@launch
                 }
@@ -261,7 +262,7 @@ class RecommendationViewModel(application: Application) : AndroidViewModel(appli
                     
                     // Apply current filter and emit
                     val filteredList = applyMediaFilter(allRecommendations)
-                    _recommendations.value = Resource.Success(filteredList)
+                    _recommendations.postValue(Resource.Success(filteredList))
                     hasMoreData = uniqueNewRecommendations.isNotEmpty()
                 } else if (newRecommendationsResource is Resource.Error) {
                     Log.e(TAG, "Error loading more recommendations: ${newRecommendationsResource.message}")

@@ -133,6 +133,7 @@ class MalStatsFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        profilePictureImageView?.let { Glide.with(this).clear(it) }
         super.onDestroyView()
         ErrorLogManager.logEvent(TAG, "LIFECYCLE", "onDestroyView — nulling 20 view refs")
         loadingIndicator = null

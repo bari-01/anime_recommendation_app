@@ -282,6 +282,7 @@ class DetailsFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        coverImageView?.let { Glide.with(this).clear(it) }
         super.onDestroyView()
         ErrorLogManager.logEvent(TAG, "LIFECYCLE", "onDestroyView \u2014 nulling 13 view refs")
         coverImageView = null
