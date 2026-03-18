@@ -71,5 +71,5 @@ interface RecommendationEngine {
      * Clear the recommendation cache.
      * @return A Resource indicating success or failure
      */
-    suspend fun clearCache(): Resource<Boolean>
+    fun clearCache(): Resource<Boolean>
 }

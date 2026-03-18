@@ -158,6 +158,8 @@ class AnimeRecApp : Application(), ComponentCallbacks2 {
                 Glide.get(this).clearMemory()
                 // Clear API response cache
                 (repository as? AnimeRepositoryImpl)?.clearCache()
+                (recommendationEngine as? com.animerec.app.recommendation.BasicRecommendationEngine)?.clearCache()
+                (recommendationEngine as? com.animerec.app.recommendation.BasicRecommendationEngine)?.clearCache()
             }
         }
     }
@@ -167,5 +169,7 @@ class AnimeRecApp : Application(), ComponentCallbacks2 {
         // Clear all memory caches
         Glide.get(this).clearMemory()
         (repository as? AnimeRepositoryImpl)?.clearCache()
+                (recommendationEngine as? com.animerec.app.recommendation.BasicRecommendationEngine)?.clearCache()
+                (recommendationEngine as? com.animerec.app.recommendation.BasicRecommendationEngine)?.clearCache()
     }
 }

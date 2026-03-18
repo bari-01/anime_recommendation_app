@@ -43,7 +43,11 @@ class BasicRecommendationEngine(
     private val TAG = "BasicRecommendationEngine"
     
     // Cache for recommendations to avoid repeated API calls
-    private val recommendationCache = mutableMapOf<String, Pair<List<AnimeContent>, Long>>()
+    private val recommendationCache = object : java.util.LinkedHashMap<String, Pair<List<AnimeContent>, Long>>(50, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Pair<List<AnimeContent>, Long>>?): Boolean {
+            return size > 50
+        }
+    }
     
     // Cache expiration time in milliseconds (10 minutes — shorter for more variety)
     private val CACHE_EXPIRATION = 10 * 60 * 1000L
@@ -467,14 +471,14 @@ class BasicRecommendationEngine(
         }
     }
     
-    override suspend fun clearCache(): Resource<Boolean> = withContext(Dispatchers.IO) {
+    override fun clearCache(): Resource<Boolean> {
         try {
             recommendationCache.clear()
-            return@withContext Resource.Success(true)
+            return Resource.Success(true)
         } catch (e: Exception) {
             Log.e(TAG, "Error clearing cache", e)
             ErrorLogManager.logEvent(TAG, "ERROR", "Cache clear failed: ${e.message}")
-            return@withContext Resource.Error("Error clearing cache: ${e.message}")
+            return Resource.Error("Error clearing cache: ${e.message}")
         }
     }
     

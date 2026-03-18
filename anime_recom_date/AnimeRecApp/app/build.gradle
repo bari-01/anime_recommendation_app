@@ -26,8 +26,18 @@ android {
         multiDexEnabled true
     }
     
+    signingConfigs {
+        release {
+            storeFile file("../AnimeMate.keystore")
+            storePassword "AnimeMate123"
+            keyAlias "AnimeMate"
+            keyPassword "AnimeMate123"
+        }
+    }
+    
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             // Enable minify and shrink resources
             minifyEnabled true
             shrinkResources true

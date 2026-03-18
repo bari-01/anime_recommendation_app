@@ -79,3 +79,43 @@
 -dontobfuscate
 -dontoptimize
 -keepattributes SourceFile,LineNumberTable
+# Gson
+-keep class com.google.gson.** { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# Retrofit
+-dontnote retrofit2.Platform
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+# OkHttp
+-keepattributes *Annotation*
+-keepclassmembers class * {
+    @retrofit2.http.* <methods>;
+}
+
+# Preserve our models for Gson parsing
+-keep class com.animerec.app.models.** { *; }
+-keep class com.animerec.app.api.response.** { *; }
+
+# Navigation
+-keepnames class androidx.navigation.fragment.NavHostFragment
+-keepnames class androidx.navigation.NavController
+
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+# Views and databinding
+-keepclassmembers class * extends androidx.viewbinding.ViewBinding {
+    public static * inflate(android.view.LayoutInflater);
+    public static * inflate(android.view.LayoutInflater, android.view.ViewGroup, boolean);
+    public static * bind(android.view.View);
+}
