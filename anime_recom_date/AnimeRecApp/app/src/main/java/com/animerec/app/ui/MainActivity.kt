@@ -58,7 +58,13 @@ class MainActivity : AppCompatActivity() {
         window.navigationBarColor = typedValue.data
         
         // Icons (light/dark)
-        val isNightMode = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val themePrefs = getSharedPreferences("theme_prefs", android.content.Context.MODE_PRIVATE)
+        val savedNightMode = themePrefs.getInt("night_mode", androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val isNightMode = if (savedNightMode == androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
+            resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        } else {
+            savedNightMode == androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+        }
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = !isNightMode
             isAppearanceLightNavigationBars = !isNightMode
