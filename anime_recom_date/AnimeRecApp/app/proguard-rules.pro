@@ -76,8 +76,6 @@
 -keep class androidx.security.crypto.** { *; }
 
 # Avoid crash in debug builds
--dontobfuscate
--dontoptimize
 -keepattributes SourceFile,LineNumberTable
 # Gson
 -keep class com.google.gson.** { *; }

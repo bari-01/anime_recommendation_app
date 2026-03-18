@@ -96,7 +96,11 @@ class UserPreferenceModel(context: Context) {
         }
         
         // Update content type weight
-        val contentType = content.type.name
+        val contentType = when (content.type) {
+            com.animerec.app.models.ContentType.ANIME -> "ANIME"
+            com.animerec.app.models.ContentType.MANGA -> "MANGA"
+            com.animerec.app.models.ContentType.NOVEL -> "NOVEL"
+        }
         val currentTypeWeight = contentTypeWeights.getOrDefault(contentType, 0.0)
         contentTypeWeights[contentType] = (currentTypeWeight + multiplier).coerceIn(-10.0, 10.0)
         
@@ -129,8 +133,20 @@ class UserPreferenceModel(context: Context) {
         }
         
         // Content type score
-        val contentType = content.type.name.lowercase()
-        score += contentTypeWeights.getOrDefault(contentType, 0.0)
+        val contentType = when (content.type) {
+            com.animerec.app.models.ContentType.ANIME -> "anime"
+            com.animerec.app.models.ContentType.MANGA -> "manga"
+            com.animerec.app.models.ContentType.NOVEL -> "novels"
+        }
+        
+        // Also we need to get the weight based on the upper case name saved previously if possible,
+        // Wait, earlier I saved "ANIME", "MANGA", "NOVEL"
+        val weightKey = when (content.type) {
+            com.animerec.app.models.ContentType.ANIME -> "ANIME"
+            com.animerec.app.models.ContentType.MANGA -> "MANGA"
+            com.animerec.app.models.ContentType.NOVEL -> "NOVEL"
+        }
+        score += contentTypeWeights.getOrDefault(weightKey, 0.0)
         if (contentType in user.contentPreferences) {
             score += 3.0
         }
