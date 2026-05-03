@@ -3,11 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeRec - Smart Anime & Manga Recommendations</title>
-    <meta name="description" content="Discover your next favorite anime, manga, or light novel with AnimeRec — a smart recommendation app powered by MyAnimeList.">
+    <title>AnimeMate - Anime, Manga & Light Novel Recommendation App | Swipe to Discover</title>
+    <meta name="description" content="Discover your next favorite anime, manga, or light novel with AnimeMate. A Tinder-style swipe recommendation app powered by MyAnimeList API. Personalized picks, watchlist sync, and MAL integration for Android 12+.">
+    <meta name="keywords" content="anime recommendation app, manga recommendation, anime swiper, myanimelist app, mal client, anime finder, anime suggestions, best anime app, anime mate, animerec, anime tracker, anime watchlist, manga reader, light novel app, top anime, anime genre filter, anime discovery">
+    <meta name="author" content="Shuvam Banerji Seal">
+    <meta name="robots" content="index, follow">
+    <meta name="revisit-after" content="7 days">
+    <meta name="language" content="English">
+    <meta name="theme-color" content="#0F0E17">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://shuvam-banerji-seal.github.io/anime_recommendation_app/">
+    <meta property="og:title" content="AnimeMate - Swipe to Discover Anime, Manga & Light Novels">
+    <meta property="og:description" content="Android app that recommends anime, manga and light novels using a Tinder-style swipe interface. Powered by MyAnimeList API with personalized recommendations, watchlist sync, and MAL integration.">
+    <meta property="og:image" content="https://shuvam-banerji-seal.github.io/anime_recommendation_app/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="AnimeMate">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AnimeMate - Anime, Manga & Light Novel Recommendation App">
+    <meta name="twitter:description" content="Swipe-based anime discovery app with MyAnimeList integration. Get personalized recommendations, track your watchlist, and explore new genres.">
+    <meta name="twitter:image" content="https://shuvam-banerji-seal.github.io/anime_recommendation_app/og-image.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://shuvam-banerji-seal.github.io/anime_recommendation_app/">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "AnimeMate",
+        "applicationCategory": "EntertainmentApplication",
+        "operatingSystem": "Android 12+",
+        "description": "AnimeMate is a Tinder-style swipe recommendation app for anime, manga, and light novels. It integrates with MyAnimeList API v2 to provide personalized content discovery, watchlist management, and user statistics tracking.",
+        "author": {
+            "@type": "Person",
+            "name": "Shuvam Banerji Seal",
+            "url": "https://github.com/Shuvam-Banerji-Seal"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "softwareVersion": "1.0.0",
+        "releaseNotes": "https://github.com/Shuvam-Banerji-Seal/anime_recommendation_app/releases",
+        "url": "https://github.com/Shuvam-Banerji-Seal/anime_recommendation_app",
+        "downloadUrl": "https://github.com/Shuvam-Banerji-Seal/anime_recommendation_app/releases",
+        "screenshot": "https://shuvam-banerji-seal.github.io/anime_recommendation_app/og-image.png",
+        "keywords": ["anime", "manga", "light novel", "recommendation", "MyAnimeList", "MAL", "Android", "swipe", "discovery"]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is AnimeMate?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "AnimeMate is an Android app that helps you discover anime, manga, and light novels through a Tinder-style swipe interface. It connects to MyAnimeList to provide personalized recommendations based on your taste."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How does the recommendation engine work?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "AnimeMate uses a Twitter/X-style recommendation engine with engagement prediction, content-user affinity matching, temporal decay for new content, diversity injection to prevent filter bubbles, and social proof from MAL scores."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does AnimeMate work with MyAnimeList?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes! AnimeMate integrates with MyAnimeList API v2 using OAuth 2 PKCE authentication. It can import your MAL watch history, sync your ratings, and update your lists in real-time."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What Android version do I need?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "AnimeMate requires Android 12+ (API level 31) or higher."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is AnimeMate free?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, AnimeMate is completely free and open-source under the MIT License."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I find top anime recommendations by genre?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Absolutely. AnimeMate supports 74 genres grouped into categories (Genres, Themes, Demographics). You can filter recommendations by genre, airing status, and minimum MAL score."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does AnimeMate support manga and light novels?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes! AnimeMate supports all three content types: anime, manga, and light novels, each with dedicated watchlists and reading lists."
+                }
+            }
+        ]
+    }
+    </script>
+
     <style>
         :root {
             --primary: #6C63FF;
@@ -22,6 +143,7 @@
             --radius: 16px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
@@ -30,6 +152,19 @@
             line-height: 1.6;
         }
         a { color: var(--primary); text-decoration: none; }
+
+        /* Skip to content (accessibility) */
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 8px;
+            z-index: 200;
+        }
+        .skip-link:focus { top: 1rem; }
 
         /* Hero */
         .hero {
@@ -241,7 +376,7 @@
         .phone-screen h4 { font-size: 1rem; margin-bottom: .5rem; }
         .phone-screen p { font-size: .8rem; color: var(--text-muted); }
 
-        /* Setup / API Key */
+        /* Setup */
         .setup-section { background: var(--bg-card); border-radius: var(--radius); padding: 3rem; margin-top: 2rem; border: 1px solid rgba(255,255,255,.06); }
         .step { display: flex; gap: 1.5rem; margin-bottom: 2rem; align-items: flex-start; }
         .step:last-child { margin-bottom: 0; }
@@ -265,6 +400,44 @@
             padding: .15rem .5rem;
             border-radius: 6px;
             font-size: .85rem;
+        }
+
+        /* FAQ */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .faq-item:hover { background: var(--bg-card-hover); }
+        .faq-question {
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform .2s;
+        }
+        .faq-item[open] .faq-question::after {
+            content: '−';
+        }
+        .faq-answer {
+            color: var(--text-muted);
+            font-size: .95rem;
+            margin-top: .75rem;
+            line-height: 1.7;
         }
 
         /* Download */
@@ -321,234 +494,303 @@
     </style>
 </head>
 <body>
+    <a href="#features" class="skip-link">Skip to content</a>
 
-<nav>
-    <div class="logo">Anime<span>Rec</span></div>
-    <ul>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#screens">Screens</a></li>
-        <li><a href="#setup">Setup</a></li>
-        <li><a href="#tech">Tech Stack</a></li>
-        <li><a href="#download">Download</a></li>
-    </ul>
-</nav>
+    <nav aria-label="Main navigation">
+        <div class="logo"><span>Anime</span>Mate</div>
+        <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#screens">Screens</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#tech">Tech Stack</a></li>
+            <li><a href="#download">Download</a></li>
+        </ul>
+    </nav>
 
-<!-- Hero -->
-<div class="hero">
-    <div class="hero-content">
-        <div class="hero-badge">Android 12+ &bull; Open Source</div>
-        <h1>Discover Your Next<br><span>Anime &amp; Manga</span></h1>
-        <p>Swipe through personalized recommendations powered by MyAnimeList. Like Tinder, but for anime, manga, and light novels.</p>
-        <div class="btn-group">
-            <a href="#download" class="btn btn-primary">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Android 12+ &bull; Open Source &bull; MyAnimeList Integration</div>
+            <h1>Discover Your Next<br><span>Anime, Manga &amp; Light Novel</span></h1>
+            <p>Swipe through personalized recommendations powered by MyAnimeList. Like Tinder, but for discovering anime, manga, and light novels you'll love.</p>
+            <div class="btn-group">
+                <a href="#download" class="btn btn-primary">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    Download APK
+                </a>
+                <a href="https://github.com/Shuvam-Banerji-Seal/anime_recommendation_app" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    View Source on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features -->
+    <section id="features" aria-label="Features">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">Everything You Need to Find Great Anime</h2>
+        <p class="section-subtitle">Built for anime, manga, and light novel fans who want smarter discovery without overwhelming lists.</p>
+        <div class="features-grid">
+            <article class="feature-card">
+                <div class="feature-icon" style="background:rgba(108,99,255,.15);" aria-hidden="true">&#x1F0CF;</div>
+                <h3>Swipe to Discover Anime</h3>
+                <p>Card-based swiping interface — swipe right to add to watchlist, left to skip, up to mark as completed. Like Tinder for anime recommendations.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" style="background:rgba(255,101,132,.15);" aria-hidden="true">&#x1F9E0;</div>
+                <h3>Smart Recommendation Engine</h3>
+                <p>Twitter/X-style recommendation engine that learns your taste from MAL history, genre preferences, and engagement patterns. 80% personalized, 20% discovery.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" style="background:rgba(0,206,209,.15);" aria-hidden="true">&#x1F4DA;</div>
+                <h3>Anime, Manga &amp; Light Novels</h3>
+                <p>Supports all three content types with dedicated browsing, watchlists, and reading lists. Filter and discover across 74 genres.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" style="background:rgba(255,193,7,.15);" aria-hidden="true">&#x1F4CA;</div>
+                <h3>MyAnimeList Statistics</h3>
+                <p>View your watching, completed, on-hold, and plan-to-watch statistics synced from MyAnimeList. Charts and detailed breakdowns of your anime journey.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" style="background:rgba(76,175,80,.15);" aria-hidden="true">&#x1F50D;</div>
+                <h3>Detailed Content Info</h3>
+                <p>Full synopsis, alternative titles, genres, MAL scores, popularity rankings, episode/chapter counts, trailers, and similar content recommendations.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" style="background:rgba(233,30,99,.15);" aria-hidden="true">&#x1F512;</div>
+                <h3>Secure MAL OAuth 2 Login</h3>
+                <p>OAuth 2 with PKCE flow for secure authentication. Your credentials never touch our servers. Tokens encrypted with Android EncryptedSharedPreferences.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" style="background:rgba(156,39,176,.15);" aria-hidden="true">&#x1F3A8;</div>
+                <h3>74 Genres to Filter By</h3>
+                <p>74 genres grouped into Genres, Themes, and Demographics. Automatically discovers genres from your MAL list and suggests new ones to explore.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" style="background:rgba(255,152,0,.15);" aria-hidden="true">&#x1F3A8;</div>
+                <h3>Material Design 3 Theming</h3>
+                <p>Beautiful light and dark themes with proper status bar and navigation bar tinting. No color intermixing — clean Material Design 3 throughout.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- App Screens -->
+    <section id="screens" aria-label="App screenshots">
+        <div class="section-label">App Screens</div>
+        <h2 class="section-title">See AnimeMate in Action</h2>
+        <p class="section-subtitle">Clean Material Design 3 interface with smooth navigation and intuitive controls for discovering anime, manga, and light novels.</p>
+        <div class="screenshots">
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="screen-icon" aria-hidden="true">&#x1F3B4;</div>
+                    <h4>Home / Swipe</h4>
+                    <p>Card stack with anime posters. Swipe to decide, tap to read more about each recommendation.</p>
+                </div>
+            </div>
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="screen-icon" aria-hidden="true">&#x1F4D6;</div>
+                    <h4>Content Details</h4>
+                    <p>Synopsis, genres, MAL score, status, trailer link, and similar anime/manga recommendations.</p>
+                </div>
+            </div>
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="screen-icon" aria-hidden="true">&#x1F4CB;</div>
+                    <h4>Watchlist</h4>
+                    <p>Track your plan-to-watch, reading, and completed anime, manga, and light novel lists in one place.</p>
+                </div>
+            </div>
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="screen-icon" aria-hidden="true">&#x1F464;</div>
+                    <h4>Profile &amp; Stats</h4>
+                    <p>MAL statistics, genre preferences, content type filters, dark mode toggle, and secure logout.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Setup -->
+    <section id="setup" aria-label="Setup guide">
+        <div class="section-label">Getting Started</div>
+        <h2 class="section-title">Set Up Your MyAnimeList API Key</h2>
+        <p class="section-subtitle">AnimeMate uses the MyAnimeList API v2 to fetch recommendations. Getting your own API key takes 5 minutes:</p>
+        <div class="setup-section">
+            <div class="step">
+                <div class="step-number" aria-hidden="true">1</div>
+                <div class="step-content">
+                    <h3>Create a MyAnimeList Account</h3>
+                    <p>If you don't have one, sign up for free at <a href="https://myanimelist.net" target="_blank" rel="noopener noreferrer">myanimelist.net</a>.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number" aria-hidden="true">2</div>
+                <div class="step-content">
+                    <h3>Register a MAL API Application</h3>
+                    <p>Go to <a href="https://myanimelist.net/apiconfig" target="_blank" rel="noopener noreferrer">myanimelist.net/apiconfig</a> and click <strong>"Create ID"</strong>. Fill in your app name and description. Set the redirect URL to <code>animerec://callback</code>.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number" aria-hidden="true">3</div>
+                <div class="step-content">
+                    <h3>Copy Your Client ID</h3>
+                    <p>After registration, copy the <strong>Client ID</strong> from your MyAnimeList API application page.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number" aria-hidden="true">4</div>
+                <div class="step-content">
+                    <h3>Configure the App</h3>
+                    <p>Open <code>AnimeRecApp.kt</code> in the source code and replace the <code>CLIENT_ID</code> constant with your own:</p>
+                    <p style="margin-top:.75rem;"><code>const val CLIENT_ID = "your_mal_client_id_here"</code></p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number" aria-hidden="true">5</div>
+                <div class="step-content">
+                    <h3>Build &amp; Run</h3>
+                    <p>Connect an Android 12+ device or emulator and run <code>./gradlew assembleDebug</code> to build your APK. The app will connect to your MAL account via OAuth 2 PKCE.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" aria-label="Frequently asked questions">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Everything you need to know about AnimeMate, the anime recommendation app.</p>
+        <div class="faq-list">
+            <details class="faq-item">
+                <summary class="faq-question">What is AnimeMate and how does it work?</summary>
+                <div class="faq-answer">
+                    AnimeMate is an Android app that helps you discover anime, manga, and light novels through a Tinder-style swipe interface. It connects to MyAnimeList to provide personalized recommendations. Swipe right to add to your watchlist, left to skip, up to mark as completed, and down to view full details including synopsis, genres, and MAL scores.
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">How does the recommendation engine find me good anime?</summary>
+                <div class="faq-answer">
+                    AnimeMate uses a Twitter/X-style recommendation engine with multiple signals: engagement prediction from your interaction history, content-user affinity matching, temporal decay that boosts currently airing content, diversity injection to prevent filter bubbles (max 40% same genre), social proof from MAL scores and popularity, and negative signal handling for disliked genres. It's 80% personalized and 20% discovery-oriented.
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">Does AnimeMate integrate with MyAnimeList?</summary>
+                <div class="faq-answer">
+                    Yes! AnimeMate integrates deeply with MyAnimeList API v2 using OAuth 2 PKCE authentication. It can import your entire MAL watch history and ratings, sync your lists bidirectionally (changes you make in the app appear on your MAL profile), and display your anime/manga statistics with charts.
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">What Android version do I need to run AnimeMate?</summary>
+                <div class="faq-answer">
+                    AnimeMate requires Android 12+ (API level 31). It targets Android 15 (API level 35) with compile SDK 35 for the best performance and latest features. The app supports both light and dark themes.
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">Can I find anime recommendations by genre?</summary>
+                <div class="faq-answer">
+                    Absolutely. AnimeMate supports 74 genres organized into three categories: Genres (Action, Romance, Comedy, etc.), Themes (Isekai, Mecha, School, etc.), and Demographics (Shonen, Seinen, Shojo, etc.). You can select your preferred genres via a chip-based UI and the recommendation engine will prioritize content matching your taste. You can also set airing status filters and minimum MAL score thresholds.
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">Does AnimeMate support manga and light novels too?</summary>
+                <div class="faq-answer">
+                    Yes! AnimeMate fully supports all three content types: anime, manga, and light novels. Each type has dedicated watchlists, reading lists, and history tracking. You can filter recommendations by content type and discover manga and light novels just as easily as anime.
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">Is AnimeMate free and open source?</summary>
+                <div class="faq-answer">
+                    Yes, AnimeMate is completely free to use and open source under the MIT License. You can view the full source code, contribute features, report issues, and fork the project on GitHub. There are no ads, no in-app purchases, and no data collection beyond what's needed for MAL API integration.
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">How do I get started with AnimeMate?</summary>
+                <div class="faq-answer">
+                    First, download the APK from the releases page and install it on your Android 12+ device. Launch the app and log in with your MyAnimeList account using OAuth 2 PKCE. Complete the profile setup by selecting your preferred content types and genres. Then start swiping! Your personalized recommendations will appear based on your MAL history and preferences.
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="tech" aria-label="Technology stack">
+        <div class="section-label">Under the Hood</div>
+        <h2 class="section-title">Built With Modern Android Technologies</h2>
+        <p class="section-subtitle">AnimeMate is built with a robust MVVM architecture, modern Jetpack libraries, and proven open-source tools.</p>
+        <div class="tech-grid">
+            <span class="tech-badge">Kotlin 1.9</span>
+            <span class="tech-badge">Android 12+ (API 31)</span>
+            <span class="tech-badge">MVVM Architecture</span>
+            <span class="tech-badge">Navigation Component</span>
+            <span class="tech-badge">ViewBinding</span>
+            <span class="tech-badge">Retrofit 2.9</span>
+            <span class="tech-badge">OkHttp 4.12</span>
+            <span class="tech-badge">Glide 4.16</span>
+            <span class="tech-badge">CardStackView</span>
+            <span class="tech-badge">Material Design 3</span>
+            <span class="tech-badge">Kotlin Coroutines</span>
+            <span class="tech-badge">LiveData</span>
+            <span class="tech-badge">Room Database</span>
+            <span class="tech-badge">DataStore</span>
+            <span class="tech-badge">SafeArgs</span>
+            <span class="tech-badge">EncryptedSharedPrefs</span>
+            <span class="tech-badge">OAuth 2 + PKCE</span>
+            <span class="tech-badge">WorkManager</span>
+            <span class="tech-badge">ProGuard / R8</span>
+            <span class="tech-badge">LeakCanary</span>
+        </div>
+    </section>
+
+    <!-- Download -->
+    <section id="download" class="download-section" aria-label="Download the app">
+        <div class="section-label">Get the App</div>
+        <h2 class="section-title">Download AnimeMate</h2>
+        <p class="section-subtitle" style="margin:0 auto 0;">Free anime, manga and light novel discovery app for Android 12+.</p>
+        <div class="download-card">
+            <p style="font-size:3rem;margin-bottom:1rem;" aria-hidden="true">&#x1F4F1;</p>
+            <h3 style="font-size:1.25rem;margin-bottom:.5rem;">AnimeMate v1.0.0</h3>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Debug build &bull; ~22 MB &bull; Android 12+ (API 31)</p>
+            <a href="https://github.com/Shuvam-Banerji-Seal/anime_recommendation_app/releases/latest/download/AnimeMate-1.0.0-release.apk" class="btn btn-primary" style="display:inline-flex;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                 Download APK
             </a>
-            <a href="https://github.com" class="btn btn-outline">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                View Source
-            </a>
+            <p style="color:var(--text-muted);font-size:.8rem;margin-top:1rem;">
+                You may need to enable "Install from unknown sources" in your device settings.
+            </p>
         </div>
-    </div>
-</div>
+    </section>
 
-<!-- Features -->
-<section id="features">
-    <div class="section-label">Features</div>
-    <h2 class="section-title">Everything You Need</h2>
-    <p class="section-subtitle">Built for anime fans who want smarter discovery without the overwhelming lists.</p>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(108,99,255,.15);">&#x1F0CF;</div>
-            <h3>Swipe to Discover</h3>
-            <p>Card-based swiping interface — swipe right to add to watchlist, left to skip, up to mark as completed.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(255,101,132,.15);">&#x1F9E0;</div>
-            <h3>Smart Recommendations</h3>
-            <p>Multi-source recommendation engine that learns your taste from your MAL history and preferences.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(0,206,209,.15);">&#x1F4DA;</div>
-            <h3>Anime, Manga &amp; Novels</h3>
-            <p>Supports all three content types with dedicated browsing, watchlists, and reading lists.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(255,193,7,.15);">&#x1F4CA;</div>
-            <h3>Your Stats at a Glance</h3>
-            <p>View your watching, completed, on-hold, and plan-to-watch statistics synced from MyAnimeList.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(76,175,80,.15);">&#x1F50D;</div>
-            <h3>Detailed Info</h3>
-            <p>Full details with synopsis, genres, ratings, trailers, and similar content recommendations.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(233,30,99,.15);">&#x1F512;</div>
-            <h3>Secure MAL Login</h3>
-            <p>OAuth2 with PKCE flow for secure authentication. Your credentials never touch our servers.</p>
-        </div>
-    </div>
-</section>
+    <footer>
+        <p>Built with &#x2764;&#xFE0F; for anime, manga and light novel fans &bull; Powered by <a href="https://myanimelist.net" target="_blank" rel="noopener noreferrer">MyAnimeList API</a></p>
+        <p style="margin-top:.5rem;">&copy; 2025 AnimeMate &bull; Open source under <a href="https://github.com/Shuvam-Banerji-Seal/anime_recommendation_app/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a> &bull; Created by <a href="https://github.com/Shuvam-Banerji-Seal" target="_blank" rel="noopener noreferrer">Shuvam Banerji Seal</a></p>
+    </footer>
 
-<!-- App Screens -->
-<section id="screens">
-    <div class="section-label">App Screens</div>
-    <h2 class="section-title">A Peek Inside</h2>
-    <p class="section-subtitle">Clean Material Design 3 interface with smooth navigation and intuitive controls.</p>
-    <div class="screenshots">
-        <div class="phone-mockup">
-            <div class="phone-screen">
-                <div class="screen-icon">&#x1F3B4;</div>
-                <h4>Home / Swipe</h4>
-                <p>Card stack with anime posters. Swipe to decide, tap to read more.</p>
-            </div>
-        </div>
-        <div class="phone-mockup">
-            <div class="phone-screen">
-                <div class="screen-icon">&#x1F4D6;</div>
-                <h4>Details</h4>
-                <p>Synopsis, genres, score, status, trailer link, and similar content.</p>
-            </div>
-        </div>
-        <div class="phone-mockup">
-            <div class="phone-screen">
-                <div class="screen-icon">&#x1F4CB;</div>
-                <h4>Watchlist</h4>
-                <p>Track your plan-to-watch, reading, and completed lists in one place.</p>
-            </div>
-        </div>
-        <div class="phone-mockup">
-            <div class="phone-screen">
-                <div class="screen-icon">&#x1F464;</div>
-                <h4>Profile</h4>
-                <p>MAL stats, genre preferences, content type filters, and logout.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Setup -->
-<section id="setup">
-    <div class="section-label">Getting Started</div>
-    <h2 class="section-title">API Key Setup</h2>
-    <p class="section-subtitle">AnimeRec uses the MyAnimeList API v2. Here's how to get your own API key:</p>
-    <div class="setup-section">
-        <div class="step">
-            <div class="step-number">1</div>
-            <div class="step-content">
-                <h3>Create a MAL Account</h3>
-                <p>If you don't have one, sign up at <a href="https://myanimelist.net" target="_blank">myanimelist.net</a>.</p>
-            </div>
-        </div>
-        <div class="step">
-            <div class="step-number">2</div>
-            <div class="step-content">
-                <h3>Register an API Application</h3>
-                <p>Go to <a href="https://myanimelist.net/apiconfig" target="_blank">myanimelist.net/apiconfig</a> and click <strong>"Create ID"</strong>. Fill in your app name, description, and set the redirect URL to <code>animerec://callback</code>.</p>
-            </div>
-        </div>
-        <div class="step">
-            <div class="step-number">3</div>
-            <div class="step-content">
-                <h3>Copy Your Client ID</h3>
-                <p>After registration, copy the <strong>Client ID</strong> from your API application page.</p>
-            </div>
-        </div>
-        <div class="step">
-            <div class="step-number">4</div>
-            <div class="step-content">
-                <h3>Update the App</h3>
-                <p>Open <code>AnimeRecApp.kt</code> and replace the <code>CLIENT_ID</code> constant with your own:</p>
-                <p style="margin-top:.75rem;"><code>const val CLIENT_ID = "your_client_id_here"</code></p>
-            </div>
-        </div>
-        <div class="step">
-            <div class="step-number">5</div>
-            <div class="step-content">
-                <h3>Build &amp; Run</h3>
-                <p>Connect an Android 12+ device or emulator and run <code>./gradlew assembleDebug</code> to build your APK.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Tech Stack -->
-<section id="tech">
-    <div class="section-label">Under the Hood</div>
-    <h2 class="section-title">Tech Stack</h2>
-    <p class="section-subtitle">Modern Android development with robust architecture and proven libraries.</p>
-    <div class="tech-grid">
-        <div class="tech-badge">Kotlin 1.9</div>
-        <div class="tech-badge">Android 12+ (API 31)</div>
-        <div class="tech-badge">MVVM Architecture</div>
-        <div class="tech-badge">Navigation Component</div>
-        <div class="tech-badge">ViewBinding</div>
-        <div class="tech-badge">Retrofit 2.9</div>
-        <div class="tech-badge">OkHttp 4.12</div>
-        <div class="tech-badge">Glide 4.16</div>
-        <div class="tech-badge">CardStackView</div>
-        <div class="tech-badge">Material Design 3</div>
-        <div class="tech-badge">Coroutines</div>
-        <div class="tech-badge">LiveData</div>
-        <div class="tech-badge">DataStore</div>
-        <div class="tech-badge">SafeArgs</div>
-        <div class="tech-badge">EncryptedSharedPrefs</div>
-        <div class="tech-badge">OAuth2 + PKCE</div>
-    </div>
-</section>
-
-<!-- Download -->
-<section id="download" class="download-section">
-    <div class="section-label">Get the App</div>
-    <h2 class="section-title">Download AnimeRec</h2>
-    <p class="section-subtitle" style="margin:0 auto 0;">Requires Android 12 or later.</p>
-    <div class="download-card">
-        <p style="font-size:3rem;margin-bottom:1rem;">&#x1F4F1;</p>
-        <h3 style="font-size:1.25rem;margin-bottom:.5rem;">AnimeRec v1.0.0</h3>
-        <p style="color:var(--text-muted);margin-bottom:1.5rem;">Debug build &bull; ~22 MB &bull; Android 12+</p>
-        <a href="https://github.com/your-username/anime_recommendation_app/releases/latest/download/app-debug.apk" class="btn btn-primary" style="display:inline-flex;">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Download APK
-        </a>
-        <p style="color:var(--text-muted);font-size:.8rem;margin-top:1rem;">
-            You may need to enable "Install from unknown sources" in your device settings.
-        </p>
-    </div>
-</section>
-
-<footer>
-    <p>Built with &#x2764;&#xFE0F; for anime fans &bull; Powered by <a href="https://myanimelist.net" target="_blank">MyAnimeList API</a></p>
-    <p style="margin-top:.5rem;">&copy; 2025 AnimeRec. Open-source under MIT License.</p>
-</footer>
-
-<script>
-    // Smooth scroll for nav links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
         });
-    });
-    
-    // Fade-in on scroll
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    document.querySelectorAll('.feature-card, .phone-mockup, .step, .tech-badge').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity .6s ease, transform .6s ease';
-        observer.observe(el);
-    });
-</script>
 
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .phone-mockup, .step, .tech-badge, .faq-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity .6s ease, transform .6s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,12 @@
+# GitHub Pages configuration
+title: AnimeMate - Anime, Manga & Light Novel Recommendation App
+description: Discover your next favorite anime, manga, or light novel with AnimeMate. A Tinder-style swipe recommendation app powered by MyAnimeList API with personalized recommendations, watchlist sync, and MAL integration.
+url: https://shuvam-banerji-seal.github.io/anime_recommendation_app
+author: Shuvam Banerji Seal
+theme: null
+plugins: []
+markdown: null
+permalink: plain
+include:
+  - index.html
+  - sitemap.xml

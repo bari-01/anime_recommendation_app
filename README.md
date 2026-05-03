@@ -2,6 +2,7 @@
 
 **Author:** Shuvam Banerji Seal 
 **License:** MIT
+**Website:** [shuvam-banerji-seal.github.io/anime_recommendation_app](https://shuvam-banerji-seal.github.io/anime_recommendation_app)
 
 > A dating-style swipe interface for discovering your next favourite anime, manga or light novel — powered by MyAnimeList and a Twitter/X-inspired recommendation engine.
 
