@@ -47,6 +47,8 @@ class HistoryFragment : Fragment(), HistoryAdapter.OnItemClickListener {
     // Current selections
     private var currentContentType = ContentType.ANIME
     private var currentStatus = "completed"
+    private var selectedContentTab: Int = 0
+    private var selectedStatusTab: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,8 +110,15 @@ class HistoryFragment : Fragment(), HistoryAdapter.OnItemClickListener {
             }
         }
 
-        // Load initial data
-        loadHistory(currentContentType, currentStatus)
+        // Restore tab state after rotation
+        if (savedInstanceState != null) {
+            selectedContentTab = savedInstanceState.getInt("history_content_tab", 0)
+            selectedStatusTab = savedInstanceState.getInt("history_status_tab", 0)
+            tabLayout?.getTabAt(selectedContentTab)?.select()
+            statusTabLayout?.getTabAt(selectedStatusTab)?.select()
+        } else {
+            loadHistory(currentContentType, currentStatus)
+        }
     }
 
     private fun setupContentTypeTabs() {
@@ -210,6 +219,12 @@ class HistoryFragment : Fragment(), HistoryAdapter.OnItemClickListener {
 
     override fun onRateItem(content: AnimeContent, score: Int) {
         viewModel.rateContent(content, score)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("history_content_tab", tabLayout?.selectedTabPosition ?: 0)
+        outState.putInt("history_status_tab", statusTabLayout?.selectedTabPosition ?: 0)
     }
 
     override fun onDestroyView() {

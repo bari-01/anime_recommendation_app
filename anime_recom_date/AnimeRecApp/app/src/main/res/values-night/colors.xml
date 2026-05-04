@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Author: Shuvam Banerji Seal | AnimeMate | MIT License -->
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FFBB86FC</color>
-    <color name="purple_700">#FF7C4DFF</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF03DAC5</color>
+    <!-- Dark theme overrides — warm amber/coral consistent with light theme -->
+    <color name="purple_200">#FFFFCC80</color>     <!-- Warm amber light -->
+    <color name="purple_500">#FFA1887F</color>     <!-- Warm rose-brown -->
+    <color name="purple_700">#FF5D4037</color>     <!-- Dark coffee -->
+    <color name="teal_200">#FFFF8A65</color>       <!-- Warm coral accent -->
+    <color name="teal_700">#FFD84315</color>       <!-- Deep orange accent -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Dark theme surfaces — warm dark tones -->
+    <color name="surface_dark">#FF1A1410</color>
+    <color name="surface_variant_dark">#FF3E2E24</color>
+    <color name="on_surface_dark">#FFFFF3E0</color>
+    <color name="on_surface_variant_dark">#FFD7CCC8</color>
+
+    <!-- Status bar colors -->
+    <color name="status_bar_dark">#FF1A1410</color>
+
+    <!-- Bottom nav -->
+    <color name="bottom_nav_dark">#FF2A1F18</color>
+
+    <!-- Card colors -->
+    <color name="card_dark">#FF2A1F18</color>
+
+    <!-- Splash background -->
+    <color name="splash_background">#FF5D4037</color>
 </resources>

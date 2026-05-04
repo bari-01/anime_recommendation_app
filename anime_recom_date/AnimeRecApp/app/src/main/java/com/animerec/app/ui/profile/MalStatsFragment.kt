@@ -161,10 +161,10 @@ class MalStatsFragment : Fragment() {
     private fun populateProfile(user: User) {
         userNameTextView?.text = user.name
 
-        if (!user.profilePictureUrl.isNullOrEmpty()) {
+        if (!user.picture.isNullOrEmpty()) {
             profilePictureImageView?.let {
                 Glide.with(this)
-                    .load(user.profilePictureUrl)
+                    .load(user.picture)
                     .circleCrop()
                     .into(it)
             }

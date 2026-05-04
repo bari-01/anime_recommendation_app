@@ -35,7 +35,7 @@ data class AnimeContent(
     val mediaType: String = "",
     val startDate: String? = null,
     val endDate: String? = null,
-    val numEpisodes: Int? = episodes
+    val numEpisodes: Int? = null
 )
 
 enum class ContentType {

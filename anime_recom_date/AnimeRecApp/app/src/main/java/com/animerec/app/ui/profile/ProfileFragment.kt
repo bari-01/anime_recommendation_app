@@ -215,10 +215,10 @@ class ProfileFragment : Fragment() {
         userDetailsTextView?.visibility = if (detailsBuilder.isEmpty()) View.GONE else View.VISIBLE
         
         // Load profile picture if available
-        if (!user.profilePictureUrl.isNullOrEmpty()) {
+        if (!user.picture.isNullOrEmpty()) {
             profilePictureImageView?.let {
                 Glide.with(this)
-                    .load(user.profilePictureUrl)
+                    .load(user.picture)
                     .circleCrop()
                     .into(it)
             }
@@ -250,7 +250,7 @@ class ProfileFragment : Fragment() {
         }
         
         // Load anime stats
-        viewModel.loadAnimeStats(user.id)
+        viewModel.loadAnimeStats()
     }
     
     /**

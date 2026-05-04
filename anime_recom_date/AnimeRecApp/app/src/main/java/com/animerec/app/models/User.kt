@@ -17,7 +17,6 @@ data class User(
     val id: Int = 0,
     val name: String = "",
     val picture: String = "",
-    val profilePictureUrl: String? = null,
     val age: Int? = null,
     val gender: String = "",
     val location: String = "",

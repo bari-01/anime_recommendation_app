@@ -19,7 +19,7 @@ import com.animerec.app.models.User
 interface AnimeRepository {
     // User operations
     suspend fun getUserProfile(): Resource<User>
-    suspend fun isProfileComplete(): Boolean
+    fun isProfileComplete(): Boolean
     
     // Content retrieval
     suspend fun getRecommendations(limit: Int): Resource<List<AnimeContent>>

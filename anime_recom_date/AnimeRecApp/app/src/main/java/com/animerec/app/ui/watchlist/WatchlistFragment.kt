@@ -38,6 +38,7 @@ class WatchlistFragment : Fragment(), WatchlistAdapter.OnItemClickListener {
 
     // Track which content type tab is selected
     private var currentContentType: ContentType = ContentType.ANIME
+    private var selectedTabPosition: Int = 0
 
     // UI components — nullable to prevent memory leaks after onDestroyView
     private var tabLayout: TabLayout? = null
@@ -104,8 +105,13 @@ class WatchlistFragment : Fragment(), WatchlistAdapter.OnItemClickListener {
             }
         }
 
-        // Load initial data
-        loadWatchlist(ContentType.ANIME)
+        // Restore tab state after rotation
+        if (savedInstanceState != null) {
+            selectedTabPosition = savedInstanceState.getInt("watchlist_tab", 0)
+            tabLayout?.getTabAt(selectedTabPosition)?.select()
+        } else {
+            loadWatchlist(ContentType.ANIME)
+        }
     }
 
     private fun setupTabLayout() {
@@ -174,6 +180,11 @@ class WatchlistFragment : Fragment(), WatchlistAdapter.OnItemClickListener {
 
     override fun onStatusChange(content: AnimeContent, newStatus: String) {
         viewModel.updateStatus(content, newStatus)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("watchlist_tab", tabLayout?.selectedTabPosition ?: 0)
     }
 
     override fun onDestroyView() {

@@ -157,7 +157,7 @@ class DetailsFragment : Fragment() {
                 val currentValue = viewModel.contentDetails.value
                 if (currentValue is Resource.Success) {
                     val content = currentValue.data
-                    val score = (rating * 2).toInt() // Convert 0-5 to 0-10
+                    val score = (rating * 2).coerceIn(1f, 10f).toInt() // Convert 0-5 to 1-10
                     viewModel.rateContent(content, score)
                     Toast.makeText(context, "Rated ${content.title} $score/10", Toast.LENGTH_SHORT).show()
                 }
@@ -257,10 +257,15 @@ class DetailsFragment : Fragment() {
     
     private fun formatStatus(status: String): String {
         return when (status) {
+            "currently_airing" -> "Currently Airing"
+            "finished_airing" -> "Finished Airing"
+            "not_yet_aired" -> "Not Yet Aired"
+            "currently_publishing" -> "Currently Publishing"
+            "finished" -> "Finished"
             "plan_to_watch" -> "Plan to Watch"
             "plan_to_read" -> "Plan to Read"
-            "watching" -> "Currently Airing"
-            "reading" -> "Currently Publishing"
+            "watching" -> "Watching"
+            "reading" -> "Reading"
             "completed" -> "Completed"
             "on_hold" -> "On Hold"
             "dropped" -> "Dropped"

@@ -87,7 +87,7 @@ class AnimeRepositoryImpl(
         }
     }
     
-    override suspend fun isProfileComplete(): Boolean {
+    override fun isProfileComplete(): Boolean {
         return prefs.getBoolean("profile_complete", false)
     }
     

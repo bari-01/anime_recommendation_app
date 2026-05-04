@@ -56,12 +56,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
     
     /**
-     * Load anime statistics for a user.
-     * Since stats are embedded in the User object from getUserProfile(),
-     * we extract them from the already-loaded profile.
+     * Load anime statistics for the current user.
+     * Stats are embedded in the User object from getUserProfile(),
+     * so we extract them from the already-loaded profile.
      */
-    @Suppress("UNUSED_PARAMETER")
-    fun loadAnimeStats(userId: Int) {
+    fun loadAnimeStats() {
         val profileValue = _userProfile.value
         if (profileValue is Resource.Success) {
             _animeStats.value = Resource.Success(profileValue.data.animeStatistics)

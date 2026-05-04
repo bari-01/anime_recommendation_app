@@ -95,7 +95,6 @@ class HomeFragment : Fragment(), CardStackListener {
             setCanScrollHorizontal(true)
             setCanScrollVertical(true)
             setSwipeThreshold(0.3f)
-            setStackFrom(StackFrom.None)
         }
         
         adapter = AnimeCardAdapter(requireContext())
